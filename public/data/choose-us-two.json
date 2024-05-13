@@ -1,0 +1,30 @@
+{
+    "chooseus":[
+      {
+        "id": "1",
+        "icon": "assets/img/icon/factory.png",
+        "title": "High Quality Build",
+        "content": "We help you find a architect by offering interior experience"
+      },
+      {
+        "id": "2",
+        "icon": "assets/img/icon/worker.png",
+        "title": "Expert Contractor",
+        "content": "We help you find a architect by offering interior experience"
+      },
+      {
+        "id": "3",
+        "icon": "assets/img/icon/support.png",
+        "title": "Unique Idea",
+        "content": "We help you find a architect by offering interior experience"
+      },
+      {
+        "id": "4",
+        "icon": "assets/img/icon/drilling-machine.png",
+        "title": "Modern Equiptment",
+        "content": "We help you find a architect by offering interior experience"
+      }
+            
+    ]
+  }
+  

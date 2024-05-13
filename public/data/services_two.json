@@ -1,0 +1,31 @@
+{
+    "services":[
+      {
+        "id": "1",        
+        "title": "Industrial Construction"
+      },
+      {
+        "id": "2",        
+        "title": "Petroleum & Oil Refinery"
+      },
+      {
+        "id": "3",        
+        "title": "Chemical Research"        
+      },
+      {
+        "id": "4",        
+        "title": "Material Engineering"        
+      },
+      {
+        "id": "5",        
+        "title": "Aero Space Service"        
+      },
+      {
+        "id": "6",        
+        "title": "Mechanical Engineering"        
+      }
+      
+             
+    ]
+  }
+  

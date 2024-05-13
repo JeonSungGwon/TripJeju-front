@@ -1,0 +1,30 @@
+{
+    "counter":[
+      {
+        "id": "1",
+        "icon": "flaticon-engineer",
+        "number": "1037",
+        "title": "Project Completed"
+      },
+      {
+        "id": "2",
+        "icon": "flaticon-plumber",
+        "number": "156",
+        "title": "Qualified Contractor"
+      },
+      {
+        "id": "3",
+        "icon": "flaticon-tow-truck",
+        "number": "750",
+        "title": "Work Order"
+      },
+      {
+        "id": "4",
+        "icon": "flaticon-factory",
+        "number": "30",
+        "title": "Worldwide Branches"
+      }
+           
+    ]
+  }
+  

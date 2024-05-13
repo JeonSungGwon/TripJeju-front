@@ -1,0 +1,18 @@
+{
+    "chooseus":[
+      {
+        "id": "1",
+        "icon": "la la-clipboard-check",
+        "title": "Certified Company",
+        "content": "Behold Lorem ipsum dolor sit, amet consectetur adipisicing elit Inventore, blanditiis"
+      },
+      {
+        "id": "2",
+        "icon": "la la-medal",
+        "title": "Experience Employee",
+        "content": "Behold Lorem ipsum dolor sit, amet consectetur adipisicing elit Inventore, blanditiis"
+      }
+            
+    ]
+  }
+  

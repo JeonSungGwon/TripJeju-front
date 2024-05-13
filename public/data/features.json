@@ -1,0 +1,23 @@
+{
+    "features":[
+      {
+        "id": "1",
+        "icon": "flaticon-helmet",
+        "title": "Industrial Leader",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta et doloribus, Lorem ipsum dolor sit amet."
+      },
+      {
+        "id": "2",
+        "icon": "flaticon-lab-tool",
+        "title": "Quality Standards",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta et doloribus, Lorem ipsum dolor sit amet."
+      },
+      {
+        "id": "3",
+        "icon": "flaticon-crane",
+        "title": "Modern Technique",
+        "content": "There are some reason build the site lorem ipsum dolor sit amet."
+      }      
+    ]
+  }
+  

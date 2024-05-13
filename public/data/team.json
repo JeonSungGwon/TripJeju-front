@@ -1,0 +1,54 @@
+{
+    "team":[
+      {
+        "id": "1",
+        "img": "/assets/img/team/1.jpg",
+        "title": "James Cameron",
+        "sub_title": "Mechanical Engineer"
+      },
+      {
+        "id": "2",
+        "img": "/assets/img/team/2.jpg",
+        "title": "Mich Thomson",
+        "sub_title": "Site Contractor"
+      },
+      {
+        "id": "3",
+        "img": "/assets/img/team/3.jpg",
+        "title": "Josh Batlar",
+        "sub_title": "Senior Contractor"
+      },
+      {
+        "id": "4",
+        "img": "/assets/img/team/4.jpg",
+        "title": "Albert Gill",
+        "sub_title": "Manager"
+      },
+      {
+        "id": "5",
+        "img": "/assets/img/team/5.jpg",
+        "title": "Ryans Dasket",
+        "sub_title": "Contractor"
+      },
+      {
+        "id": "6",
+        "img": "/assets/img/team/6.jpg",
+        "title": "George Dowling",
+        "sub_title": "Site Engineer"
+      },
+      {
+        "id": "7",
+        "img": "/assets/img/team/7.jpg",
+        "title": "Martin Guptil",
+        "sub_title": "Civil Engineer"
+      },
+      {
+        "id": "8",
+        "img": "/assets/img/team/8.jpg",
+        "title": "Cambel Abraham",
+        "sub_title": "Contractor"
+      }
+          
+    ]
+  }
+  

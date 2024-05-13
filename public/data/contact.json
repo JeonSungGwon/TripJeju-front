@@ -1,0 +1,23 @@
+{
+    "contact":[
+      {
+        "id": "1",
+        "icon": "las la-map-marker",
+        "title": "Visit Us",
+        "content": "66 Broklyn St. NY, USA"
+      },
+      {
+        "id": "2",
+        "icon": "las la-envelope",
+        "title": "Email Address",
+        "content": "info@dustrian.com"
+      },
+      {
+        "id": "3",
+        "icon": "las la-phone",
+        "title": "Call Now",
+        "content": "(+1)212-946-2064"
+      }      
+    ]
+  }
+  

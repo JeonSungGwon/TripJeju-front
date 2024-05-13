@@ -1,0 +1,34 @@
+{
+    "testimonials":[
+      {
+        "id": "1",
+        "content": "There are many reseon Lorem ipsum dolor sit amet elit. Alias reprehenderit",
+        "author_img": "assets/img/testimonial/1.jpg",
+        "author_name": "Michael Johnson",
+        "author_designation": "Social Activist"        
+      },
+      {
+        "id": "2",
+        "content": "There are many reseon Lorem ipsum dolor sit amet elit. Alias reprehenderit",
+        "author_img": "assets/img/testimonial/2.jpg",
+        "author_name": "Brian York",
+        "author_designation": "Manager"        
+      },
+      {
+        "id": "3",
+        "content": "There are many reseon Lorem ipsum dolor sit amet elit. Alias reprehenderit",
+        "author_img": "assets/img/testimonial/3.jpg",
+        "author_name": "Andre Fletcher",
+        "author_designation": "Chief Executive"        
+      },
+      {
+        "id": "4",
+        "content": "There are many reseon Lorem ipsum dolor sit amet elit. Alias reprehenderit",
+        "author_img": "assets/img/testimonial/4.jpg",
+        "author_name": "Josh Batlar",
+        "author_designation": "Business Man"        
+      }
+           
+    ]
+  }
+  

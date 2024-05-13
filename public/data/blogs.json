@@ -1,0 +1,78 @@
+{
+    "blogs":[
+      {
+        "id": "1",
+        "bg": "assets/img/blog/blog-bg-1.jpg",
+        "date": "07 Mar",
+        "tag": "welding", 
+        "title": "We believe in building long lasting our business relationships", 
+        "content": "There are some reason Lorem ipsum dolor sit amet, consecte adipisicing elit task forever" 
+      },
+      {
+        "id": "2",
+        "bg": "assets/img/blog/blog-bg-2.jpg",
+        "date": "25 Feb",
+        "tag": "construction", 
+        "title": "Five Importances practices for Industrial Enterpreneurs", 
+        "content": "There are some reason Lorem ipsum dolor sit amet, consecte adipisicing elit task forever" 
+      },
+      {
+        "id": "3",
+        "bg": "assets/img/blog/blog-bg-3.jpg",
+        "date": "15 Feb",
+        "tag": "industrial", 
+        "title": "Auto Desk spent building long lasting our business relationships", 
+        "content": "There are some reason Lorem ipsum dolor sit amet, consecte adipisicing elit task forever" 
+      },
+      {
+        "id": "4",
+        "bg": "assets/img/blog/blog-bg-4.jpg",
+        "date": "15 Feb",
+        "tag": "industrial", 
+        "title": "Auto Desk spent building long lasting our business relationships", 
+        "content": "There are some reason Lorem ipsum dolor sit amet, consecte adipisicing elit task forever" 
+      },
+      {
+        "id": "5",
+        "bg": "assets/img/blog/blog-bg-5.jpg",
+        "date": "15 Feb",
+        "tag": "industrial", 
+        "title": "Auto Desk spent building long lasting our business relationships", 
+        "content": "There are some reason Lorem ipsum dolor sit amet, consecte adipisicing elit task forever" 
+      },
+      {
+        "id": "6",
+        "bg": "assets/img/blog/blog-bg-6.jpg",
+        "date": "15 Feb",
+        "tag": "industrial", 
+        "title": "Auto Desk spent building long lasting our business relationships", 
+        "content": "There are some reason Lorem ipsum dolor sit amet, consecte adipisicing elit task forever" 
+      },
+      {
+        "id": "7",
+        "bg": "assets/img/blog/blog-bg-7.jpg",
+        "date": "15 Feb",
+        "tag": "industrial", 
+        "title": "Auto Desk spent building long lasting our business relationships", 
+        "content": "There are some reason Lorem ipsum dolor sit amet, consecte adipisicing elit task forever" 
+      },
+      {
+        "id": "8",
+        "bg": "assets/img/blog/blog-bg-8.jpg",
+        "date": "15 Feb",
+        "tag": "industrial", 
+        "title": "Auto Desk spent building long lasting our business relationships", 
+        "content": "There are some reason Lorem ipsum dolor sit amet, consecte adipisicing elit task forever" 
+      },
+      {
+        "id": "9",
+        "bg": "assets/img/blog/blog-bg-9.jpg",
+        "date": "15 Feb",
+        "tag": "industrial", 
+        "title": "Auto Desk spent building long lasting our business relationships", 
+        "content": "There are some reason Lorem ipsum dolor sit amet, consecte adipisicing elit task forever" 
+      }
+           
+    ]
+  }
+  

@@ -1,0 +1,43 @@
+{
+    "services":[
+      {
+        "id": "1",
+        "icon": "flaticon-plumber",
+        "title": "Construction Industry",
+        "content": "There are some reason build the site lorem ipsum dolor sit amet."
+      },
+      {
+        "id": "2",
+        "icon": "flaticon-oil-pump",
+        "title": "Petrolieum & Gas Refinery",
+        "content": "There are some reason build the site lorem ipsum dolor sit amet."
+      },
+      {
+        "id": "3",
+        "icon": "flaticon-lab-tool",
+        "title": "Chemical Research",
+        "content": "There are some reason build the site lorem ipsum dolor sit amet."
+      },
+      {
+        "id": "4",
+        "icon": "flaticon-drilling-machine",
+        "title": "Mechanical Engineering",
+        "content": "There are some reason build the site lorem ipsum dolor sit amet."
+      },
+      {
+        "id": "5",
+        "icon": "flaticon-eco-energy",
+        "title": "Industrial Ecology",
+        "content": "There are some reason build the site lorem ipsum dolor sit amet."
+      },
+      {
+        "id": "6",
+        "icon": "flaticon-crane",
+        "title": "Civil Engineering",
+        "content": "There are some reason build the site lorem ipsum dolor sit amet."
+      }
+      
+             
+    ]
+  }
+  

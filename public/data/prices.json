@@ -1,0 +1,43 @@
+{
+    "prices":[
+      {
+        "id": "1",
+        "title": "Standard",                
+        "amount": "$12",                
+        "content": "Perfect for Construction Industry",
+        "feature": [
+          "Concept Project",
+          "Site Planning",
+          "Civil Work",
+          "Hire Contractor"
+        ]
+      },
+      {
+        "id": "2",
+        "title": "Advance",                
+        "amount": "$150",                
+        "content": "Perfect for Residential Building",
+        "feature": [
+          "Concept Project",
+          "Site Planning",
+          "Civil Work",
+          "Hire Contractor"
+        ]
+      },
+      {
+        "id": "3",
+        "title": "Premium",                
+        "amount": "$300",                
+        "content": "Perfect for Industrial Factory",
+        "feature": [
+          "Concept Project",
+          "Site Planning",
+          "Civil Work",
+          "Hire Contractor"
+        ]
+      }
+     
+           
+    ]
+  }
+  
