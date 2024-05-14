@@ -776,8 +776,8 @@ textarea:focus::-webkit-input-placeholder {
 }
 
 .header-area .logo img {
-	width: 210px;
-	margin-top: 7px;
+	width: 150px;
+	margin-top: -30px;
 }
 
 #header-2 .navigation {
@@ -1042,27 +1042,27 @@ textarea:focus::-webkit-input-placeholder {
 ==================*/
 
 .single-slide-item {
-	background-image: url(../img/slider/slide-1.jpg);
+	background-image: url(../img/jeju/jeju-island-6889156_1280.jpg);
 }
 
 .hero-area-bg-2 {
-	background-image: url(../img/slider/slide-2.jpg);
+	background-image: url(../img/jeju/ocean-7281047_1920.jpg);
 }
 
 #home2 .single-slide-item {
-	background-image: url(../img/slider/slide-3.jpg);
+	background-image: url(../img/jeju/jeju-island-6889156_1280.jpg);
 }
 
 #home2 .hero-area-bg-2 {
-	background-image: url(../img/slider/slide-4.jpg);
+	background-image: url(../img/jeju/jeju-island-6889156_1280.jpg);
 }
 
 #home3 .single-slide-item {
-	background-image: url(../img/slider/slide-5.png);
+	background-image: url(../img/jeju/jeju-island-6889156_1280.jpg);
 }
 
 #home3 .hero-area-bg-2 {
-	background-image: url(../img/slider/slide-6.jpg);
+	background-image: url(../img/jeju/jeju-island-6889156_1280.jpg);
 }
 
 .single-slide-item {
@@ -2029,7 +2029,7 @@ p.privacy {
 
 
 .info-bg {
-	background-image: url(../img/info/info-bg.jpg);
+	background-image: url(../img/jeju/jeju-island-6889156_1280.jpg);
 }
 
 .info-area {
@@ -2277,7 +2277,7 @@ p.highlight i {
 ============== */
 
 .project-grids {
-	background-image: url(../img/project/featured-project-bg.jpg);
+	background-image: url(../img/jeju/jeju-island-6889156_1280.jpg);
 	position: relative;
 	z-index: 1;
 }

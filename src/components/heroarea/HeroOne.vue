@@ -67,9 +67,9 @@ onMounted(() => {
  					<div class="row justify-content-center">
  						<div class="col-lg-12 wow fadeInUp animated" data-wow-delay=".2s">
  							<div class="section-title">
- 								<h6 class="text-white">We Build only big things</h6>
- 								<h1>We are leader<br> Industrial Business</h1>
- 								<p> Industrial Revolution, in modern history, the process of change from an agrarian <br>and handicraft economy to one dominated by industry and machine manufacturing.</p>
+								<h6 class="text-white">Trip Jeju</h6>
+ 								<h1>제주도<br> 놀러옵서예</h1>
+ 								<p> 정말 재밌다 <br>너무 잘만들었다</p>
  							</div>
  							<router-link :to="{name:'about'}" class="main-btn">Learn More</router-link>
  						</div>
@@ -85,9 +85,9 @@ onMounted(() => {
  					<div class="row justify-content-center">
  						<div class="col-lg-12 wow fadeInUp animated" data-wow-delay=".2s">
  							<div class="section-title">
- 								<h6 class="text-white">We provide best satisfied work</h6>
- 								<h1>We turn vision<br> Factory Solutions</h1>
- 								<p> Industrial Revolution, in modern history, the process of change from an agrarian <br>and handicraft economy to one dominated by industry and machine manufacturing.</p>
+								<h6 class="text-white">Trip Jeju</h6>
+ 								<h1>제주도 바다<br> 예쁘다.</h1>
+ 			
  							</div>
  							<router-link :to="{name:'about'}" class="main-btn">Learn More</router-link>
  						</div>

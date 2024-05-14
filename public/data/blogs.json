@@ -2,7 +2,7 @@
     "blogs":[
       {
         "id": "1",
-        "bg": "assets/img/blog/blog-bg-1.jpg",
+        "bg": "/assets/img/jeju/jeju-island-6889156_1280.jpg",
         "date": "07 Mar",
         "tag": "welding", 
         "title": "We believe in building long lasting our business relationships", 
@@ -10,7 +10,7 @@
       },
       {
         "id": "2",
-        "bg": "assets/img/blog/blog-bg-2.jpg",
+        "bg": "/assets/img/jeju/jeju-island-6889156_1280.jpg",
         "date": "25 Feb",
         "tag": "construction", 
         "title": "Five Importances practices for Industrial Enterpreneurs", 
@@ -18,7 +18,7 @@
       },
       {
         "id": "3",
-        "bg": "assets/img/blog/blog-bg-3.jpg",
+        "bg": "/assets/img/jeju/jeju-island-6889156_1280.jpg",
         "date": "15 Feb",
         "tag": "industrial", 
         "title": "Auto Desk spent building long lasting our business relationships", 
@@ -26,7 +26,7 @@
       },
       {
         "id": "4",
-        "bg": "assets/img/blog/blog-bg-4.jpg",
+        "bg": "/assets/img/jeju/jeju-island-6889156_1280.jpg",
         "date": "15 Feb",
         "tag": "industrial", 
         "title": "Auto Desk spent building long lasting our business relationships", 

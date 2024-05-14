@@ -76,7 +76,7 @@ onMounted(() => {
 					<div class="row align-items-center">
 						<div class="col-lg-3">
 							<div class="logo">
-								<router-link class="navbar-brand" to="/"><img src="/assets/img/logo.png"
+								<router-link class="navbar-brand" to="/"><img src="/assets/img/jeju/logo.png" width="100" height="150"
 										alt="" /></router-link>
 							</div>
 						</div>

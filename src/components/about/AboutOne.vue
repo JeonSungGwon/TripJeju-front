@@ -5,10 +5,10 @@
  				<div class="col-lg-6 col-md-12 col-sm-12">
 					<div class="about-img-wrap">
                     <div class="image-one wow fadeInUp" data-wow-delay=".2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
-                        <img src="/assets/img/about/about-page-1.jpg" alt="">
+                        <img src="/assets/img/jeju/jeju-island-6889156_1280.jpg" alt="">
                     </div>                        
                     <div class="image-two wow fadeInUp" data-wow-delay=".4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
-                        <img src="/assets/img/about/about-page-2.jpg" alt="">
+                        <img src="/assets/img/jeju/jeju-island-6889156_1280.jpg" alt="">
                     </div>                                            
                 </div> 					
  				</div>
