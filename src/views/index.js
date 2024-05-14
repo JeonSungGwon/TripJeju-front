@@ -5,6 +5,7 @@ export { default as HomeThree } from "./HomeThree.vue";
 export { default as About } from "./About.vue";
 export { default as ChooseUs } from "./ChooseUs.vue";
 export { default as Team } from "./Team.vue";
+export { default as Festival } from "./Festival.vue";
 export { default as Price } from "./Price.vue";
 export { default as Faq } from "./Faq.vue";
 

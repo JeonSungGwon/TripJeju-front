@@ -2,7 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 
 import {
 	HomeOne, HomeTwo, HomeThree, About, ChooseUs, Team, Price, Faq, ServiceOne, ServiceTwo, ServiceDetails, Project, ProjectDetails, Blog, BlogDetails, Contact,
-	RedirectView
+	RedirectView, Festival
 	
   } from "../views";
 
@@ -39,7 +39,12 @@ const routes = [
 		path: "/team",
 		name: "team",
 		component: Team,
-	},		
+	},
+	{
+		path: "/festival",
+		name: "festival",
+		component: Festival,
+	},				
 	{
 		path: "/price",
 		name: "price",

@@ -95,28 +95,30 @@ onMounted(() => {
 										id="navbarSupportedContent">
 										<ul class="navbar-nav m-auto">
 											<li class="nav-item">
-												<a class="nav-link active" href="#">Home
+												<a class="nav-link" href="#">여행지
 													<span class="sub-nav-toggler"> </span>
 												</a>
 												<ul class="sub-menu">
 													<li>
-														<router-link :to="{ name: 'home' }">Home-Main</router-link>
+														<router-link :to="{ name: 'home' }">관광지</router-link>
 													</li>
 													<li>
-														<router-link :to="{ name: 'home2' }">Home-Industry</router-link>
+														<router-link :to="{ name: 'home2' }">음식</router-link>
 													</li>
 													<li>
 														<router-link
-															:to="{ name: 'home3' }">Home-Construction</router-link>
+															:to="{ name: 'home3' }">숙박</router-link>
+													</li>
+													<li>
+														<router-link
+															:to="{ name: 'home3' }">쇼핑</router-link>
 													</li>
 												</ul>
 											</li>
 
 											<li class="nav-item">
-												<a class="nav-link" href="#">Pages
-													<span class="sub-nav-toggler"> </span>
-												</a>
-												<ul class="sub-menu">
+												<router-link class="nav-link " :to="{ name: 'festival' }">축제 및 행사</router-link>
+												<!-- <ul class="sub-menu">
 													<li>
 														<router-link :to="{ name: 'about' }">About us</router-link>
 													</li>
@@ -133,61 +135,46 @@ onMounted(() => {
 													<li>
 														<router-link :to="{ name: 'faq' }">FAQ</router-link>
 													</li>
-												</ul>
+												</ul> -->
 											</li>
 											<li class="nav-item">
-												<a class="nav-link" href="#">Services
+												<a class="nav-link" href="#">여행 게시판
 													<span class="sub-nav-toggler"> </span>
 												</a>
 												<ul class="sub-menu">
 													<li>
 														<router-link
-															:to="{ name: 'service-1' }">Services-01</router-link>
+															:to="{ name: 'service-1' }">여행지 후기</router-link>
 													</li>
 													<li>
 														<router-link
-															:to="{ name: 'service-2' }">Services-02</router-link>
+															:to="{ name: 'service-2' }">여행지 추천</router-link>
 													</li>
-													<li>
-														<router-link :to="{ name: 'service-details' }">Service
-															Details</router-link>
-													</li>
+		
 												</ul>
 											</li>
 
 											<li class="nav-item">
-												<a class="nav-link" href="#">Projects
+												<a class="nav-link" href="#">나의 여행
 													<span class="sub-nav-toggler"> </span>
 												</a>
 												<ul class="sub-menu">
 													<li>
-														<router-link :to="{ name: 'project' }">Projects</router-link>
+														<router-link :to="{ name: 'project' }">나의 여행일정</router-link>
 													</li>
 													<li>
-														<router-link :to="{ name: 'project-details' }">Project
-															Details</router-link>
+														<router-link :to="{ name: 'project-details' }">찜한 여행</router-link>
+													</li>
+													<li>
+														<router-link :to="{ name: 'project-details' }">나의 리뷰</router-link>
+													</li>
+													<li>
+														<router-link :to="{ name: 'project-details' }">방문 여행지</router-link>
 													</li>
 												</ul>
 											</li>
 
-											<li class="nav-item">
-												<a class="nav-link" href="#">Blog
-													<span class="sub-nav-toggler"> </span>
-												</a>
-												<ul class="sub-menu">
-													<li>
-														<router-link :to="{ name: 'blog' }">Blog</router-link>
-													</li>
-													<li>
-														<router-link :to="{ name: 'blog-details' }">Blog
-															Details</router-link>
-													</li>
-												</ul>
-											</li>
-											<li class="nav-item">
-												<router-link class="nav-link"
-													:to="{ name: 'contact' }">Contact</router-link>
-											</li>
+											
 										</ul>
 									</div>
 								</nav>

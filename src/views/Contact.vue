@@ -13,7 +13,7 @@ import { HeaderOne, BreadCrumb } from "../components";
 			  <p>로그인하려면 아래를 누르십시오</p>
 			  <div class="login-buttons">
 				<!-- 카카오 로그인 버튼 -->
-				<p><img src="/assets/img/logo/kakao_login_medium_narrow.png" alt="카카오 로그인" @click="redirectToKakao" style="cursor: pointer; width: 150px; height: 50px;"></p>
+				<p><img src="/assets/img/logo/kakao_login_large_narrow.png" alt="카카오 로그인" @click="redirectToKakao" style="cursor: pointer; width: 150px; height: 50px;"></p>
 				<!-- 네이버 로그인 버튼 -->
 				<p><img src="/assets/img/logo/btnG_naver.png" alt="네이버 로그인" @click="redirectToNaver" style="cursor: pointer; width: 150px; height: 50px;"></p>
 				<!-- 구글 로그인 버튼 -->
