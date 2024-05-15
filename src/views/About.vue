@@ -4,12 +4,13 @@ import {AboutOne, BreadCrumb, HeaderThree, CounterOne, AboutThree, ProcessSectio
 
 
 } from "../components";
-
+import Jejuspots from "@/views/JejuSpots.vue";
 
 </script>
 <template>
     <HeaderThree/>
     <BreadCrumb/>
+    <Jejuspots/>
     <AboutOne/>
     <CounterOne/>
     <AboutThree/>
