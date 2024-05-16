@@ -44,7 +44,10 @@ const currentPageTitle = computed(() => {
       break;   
       case "contact":
       currentPath = "Contact";
-      break;   
+      break;  
+      case "festival":
+      currentPath = "제주도 축제";
+      break;  
       default:
       currentPath = route.name;
       break;
