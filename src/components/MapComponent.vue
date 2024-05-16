@@ -73,7 +73,7 @@ export default {
             .join(", ")}<br />`,
           `       <img src="${spot.thumbnailPath}" width="300px" class="thumb" /><br />`,
           `   </p>`,
-          `   <img src="public/assets/img/${
+          `   <img src="/assets/img/${
             isFavorite ? "favoriteOn.png" : "favoriteOff.png"
           }" class="favorite-button" style="width: 32px; height: 32px; cursor: pointer;" />`,
           `</div>`,
@@ -154,7 +154,7 @@ export default {
         })
         .then(() => {
           alert("Added to favorites!");
-          element.src = "public/assets/img/favoriteOn.png";
+          element.src = "assets/img/favoriteOn.png";
           this.loadFavorites(); // Reload favorites after adding
         })
         .catch((error) => console.error("Error adding to favorites:", error));
@@ -165,7 +165,7 @@ export default {
         .delete(`http://localhost:8080/favorite/${favoriteId}`)
         .then(() => {
           alert("Removed from favorites!");
-          element.src = "public/assets/img/favoriteOff.png";
+          element.src = "assets/img/favoriteOff.png";
           this.loadFavorites(); // Reload favorites after removing
         })
         .catch((error) =>
