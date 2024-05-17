@@ -100,18 +100,18 @@ onMounted(() => {
 												</a>
 												<ul class="sub-menu">
 													<li>
-														<router-link :to="{ name: 'home' }">관광지</router-link>
+														<router-link :to="{ name: 'tour' }">관광지</router-link>
 													</li>
 													<li>
-														<router-link :to="{ name: 'home2' }">음식</router-link>
-													</li>
-													<li>
-														<router-link
-															:to="{ name: 'home3' }">숙박</router-link>
+														<router-link :to="{ name: 'food' }">음식</router-link>
 													</li>
 													<li>
 														<router-link
-															:to="{ name: 'home3' }">쇼핑</router-link>
+															:to="{ name: 'lodge' }">숙박</router-link>
+													</li>
+													<li>
+														<router-link
+															:to="{ name: 'shop' }">쇼핑</router-link>
 													</li>
 												</ul>
 											</li>

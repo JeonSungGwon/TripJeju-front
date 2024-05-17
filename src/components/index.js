@@ -48,3 +48,7 @@ export { default as FooterBottom } from "./footer/FooterBottom.vue";
 
 export { default as BreadCrumb } from "./BreadCrumb.vue";
 export { default as FeatureProject } from "./FeatureProject.vue";
+
+export { default as SpotFilter } from "./SpotFilter.vue";
+export { default as SpotItem } from "./SpotItem.vue";
+export { default as SpotMap } from "./SpotMap.vue";

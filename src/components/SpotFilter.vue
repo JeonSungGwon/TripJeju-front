@@ -1,99 +1,65 @@
 <template>
-  <div id="filterContainer">
-    <button @click="toggleBox" class="toggle-button">{{ showBox ? '▲' : '▼' }} 검색 필터</button>
-    <div v-show="showBox">
-      <div class="search-box">
-        <input type="text" placeholder="제목 검색" v-model="title" @input="debounceUpdateTitle" />
+  <div id="filterWrapper">
+    <button class="toggle-filters-button" @click="toggleFilters">
+      {{ showFilters ? "필터 닫기" : "필터 열기" }}
+    </button>
+    <div v-if="showFilters">
+      <!-- 검색창 -->
+      <div class="filter-search">
+        <input
+          type="text"
+          placeholder="관광지명을 검색하세요"
+          v-model="title"
+          @input="emitFilterUpdate"
+        />
       </div>
 
-      <div class="type-box">
-        <label><input type="checkbox" value="c1" v-model="selectedTypes" @change="updateType"> 관광지</label>
-        <label><input type="checkbox" value="c2" v-model="selectedTypes" @change="updateType"> 쇼핑</label>
-        <label><input type="checkbox" value="c3" v-model="selectedTypes" @change="updateType"> 숙소</label>
-        <label><input type="checkbox" value="c4" v-model="selectedTypes" @change="updateType"> 음식점</label>
-      </div>
-
-      <div class="tagBox box01">
-        <input id="hashTagTypeA_all" type="radio" name="tag" value="" @change="setTag('')" checked>
-        <button title="선택됨" class="bt2">#전체</button>
-        <input id="hashTagTypeA_액티비티" type="radio" name="tag" value="액티비티" @change="setTag('액티비티')">
-        <button class="bt2">#액티비티</button>
-        <input id="hashTagTypeA_실내관광지" type="radio" name="tag" value="실내관광지" @change="setTag('실내관광지')">
-        <button class="bt2">#실내관광지</button>
-        <input id="hashTagTypeA_테마공원" type="radio" name="tag" value="테마공원" @change="setTag('테마공원')">
-        <button class="bt2">#테마공원</button>
-        <input id="hashTagTypeA_무장애관광" type="radio" name="tag" value="무장애관광" @change="setTag('무장애관광')">
-        <button class="bt2">#무장애관광</button>
-        <input id="hashTagTypeA_러닝홀리데이인제주" type="radio" name="tag" value="러닝홀리데이인제주" @change="setTag('러닝홀리데이인제주')">
-        <button class="bt2">#러닝홀리데이인제주</button>
-        <input id="hashTagTypeA_안전여행스탬프" type="radio" name="tag" value="안전여행스탬프" @change="setTag('안전여행스탬프')">
-        <button class="bt2">#안전여행스탬프</button>
-        <input id="hashTagTypeA_우수관광사업체" type="radio" name="tag" value="우수관광사업체" @change="setTag('우수관광사업체')">
-        <button class="bt2">#우수관광사업체</button>
-        <input id="hashTagTypeA_웰니스" type="radio" name="tag" value="웰니스" @change="setTag('웰니스')">
-        <button class="bt2">#웰니스</button>
-      </div>
-
-      <div class="tagBox box02">
-        <input id="hashTagTypeB_오름" type="radio" name="tag" value="오름" @change="setTag('오름')">
-        <button class="bt2">#오름</button>
-        <input id="hashTagTypeB_포토스팟" type="radio" name="tag" value="포토스팟" @change="setTag('포토스팟')">
-        <button class="bt2">#포토스팟</button>
-        <input id="hashTagTypeB_숲" type="radio" name="tag" value="숲" @change="setTag('숲')">
-        <button class="bt2">#숲</button>
-        <input id="hashTagTypeB_유네스코" type="radio" name="tag" value="유네스코" @change="setTag('유네스코')">
-        <button class="bt2">#유네스코</button>
-        <input id="hashTagTypeB_마을관광" type="radio" name="tag" value="마을관광" @change="setTag('마을관광')">
-        <button class="bt2">#마을관광</button>
-        <input id="hashTagTypeB_드라이브" type="radio" name="tag" value="드라이브" @change="setTag('드라이브')">
-        <button class="bt2">#드라이브</button>
-        <input id="hashTagTypeB_반려동물동반_관광지" type="radio" name="tag" value="반려동물동반_관광지" @change="setTag('반려동물동반_관광지')">
-        <button class="bt2">#반려동물동반_관광지</button>
-      </div>
-
-      <div class="regionWrap">
-        <div class="showRegion">
-          <button @click="toggleRegion" class="bt1">지역별 태그 검색</button>
+      <!-- 태그 필터 -->
+      <div class="filterGroup">
+        <label class="filter-label">태그</label>
+        <div class="tagBox">
+          <button
+            v-for="tag in filteredTags"
+            :key="tag.value"
+            :class="['filter-button', { active: selectedTag === tag.value }]"
+            @click="toggleTag(tag.value)"
+          >
+            #{{ tag.label }}
+          </button>
         </div>
-        <div class="regionTags" v-show="showRegion">
-          <div class="tagBox box01">
-            <input id="region_0" type="radio" name="region1cd" value="제주시" @change="setRegion('제주시', '')">
-            <button class="bt2 region_0">#제주시</button>
-            <input id="region_0_0" type="radio" name="region2cd" value="제주시내" @change="setRegion('제주시', '제주시내')">
-            <button class="bt2 region_0_0">#제주시내</button>
-            <input id="region_0_1" type="radio" name="region2cd" value="애월" @change="setRegion('제주시', '애월')">
-            <button class="bt2 region_0_1">#애월</button>
-            <input id="region_0_2" type="radio" name="region2cd" value="한림" @change="setRegion('제주시', '한림')">
-            <button class="bt2 region_0_2">#한림</button>
-            <input id="region_0_3" type="radio" name="region2cd" value="한경" @change="setRegion('제주시', '한경')">
-            <button class="bt2 region_0_3">#한경</button>
-            <input id="region_0_4" type="radio" name="region2cd" value="조천" @change="setRegion('제주시', '조천')">
-            <button class="bt2 region_0_4">#조천</button>
-            <input id="region_0_5" type="radio" name="region2cd" value="구좌" @change="setRegion('제주시', '구좌')">
-            <button class="bt2 region_0_5">#구좌</button>
-            <input id="region_0_6" type="radio" name="region2cd" value="우도" @change="setRegion('제주시', '우도')">
-            <button class="bt2">#우도</button>
-            <input id="region_0_7" type="radio" name="region2cd" value="추자" @change="setRegion('제주시', '추자')">
-            <button class="bt2">#추자</button>
-          </div>
-          <div class="tagBox box01">
-            <input id="region_1" type="radio" name="region1cd" value="서귀포시" @change="setRegion('서귀포시', '')">
-            <button class="bt2 region_1">#서귀포시</button>
-            <input id="region_1_0" type="radio" name="region2cd" value="성산" @change="setRegion('서귀포시', '성산')">
-            <button class="bt2 region_1_0">#성산</button>
-            <input id="region_1_1" type="radio" name="region2cd" value="서귀포시내" @change="setRegion('서귀포시', '서귀포시내')">
-            <button class="bt2 region_1_1">#서귀포시내</button>
-            <input id="region_1_2" type="radio" name="region2cd" value="대정" @change="setRegion('서귀포시', '대정')">
-            <button class="bt2 region_1_2">#대정</button>
-            <input id="region_1_3" type="radio" name="region2cd" value="안덕" @change="setRegion('서귀포시', '안덕')">
-            <button class="bt2 region_1_3">#안덕</button>
-            <input id="region_1_4" type="radio" name="region2cd" value="중문" @change="setRegion('서귀포시', '중문')">
-            <button class="bt2 region_1_4">#중문</button>
-            <input id="region_1_5" type="radio" name="region2cd" value="남원" @change="setRegion('서귀포시', '남원')">
-            <button class="bt2 region_1_5">#남원</button>
-            <input id="region_1_6" type="radio" name="region2cd" value="표선" @change="setRegion('서귀포시', '표선')">
-            <button class="bt2 region_1_6">#표선</button>
-          </div>
+      </div>
+
+      <!-- 지역 필터 -->
+      <div class="filterGroup">
+        <label class="filter-label">지역</label>
+        <div class="regionBox">
+          <button
+            v-for="region in regions"
+            :key="region.value"
+            :class="[
+              'filter-button',
+              { active: selectedRegion === region.value },
+            ]"
+            @click="toggleRegion(region.value)"
+          >
+            #{{ region.label }}
+          </button>
+        </div>
+        <div
+          v-if="selectedRegion && subregions[selectedRegion]"
+          class="subregionBox"
+        >
+          <button
+            v-for="subregion in subregions[selectedRegion]"
+            :key="subregion.value"
+            :class="[
+              'filter-button',
+              { active: selectedSubregion === subregion.value },
+            ]"
+            @click="toggleSubregion(subregion.value)"
+          >
+            #{{ subregion.label }}
+          </button>
         </div>
       </div>
     </div>
@@ -102,80 +68,210 @@
 
 <script>
 export default {
+  props: {
+    type: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
-      showBox: false,
-      showRegion: false,
-      title: '',
-      selectedTypes: [],
-      debounceTimeout: null
+      showFilters: true, // 필터 표시 여부 초기값
+      selectedTag: "",
+      selectedRegion: "",
+      selectedSubregion: "",
+      title: "",
+      tags: {
+        c1: [
+          { label: "전체", value: "" },
+          { label: "액티비티", value: "액티비티" },
+          { label: "실내관광지", value: "실내관광지" },
+          { label: "무장애관광", value: "무장애관광" },
+          { label: "러닝홀리데이인제주", value: "러닝홀리데이인제주" },
+          { label: "안전여행스탬프", value: "안전여행스탬프" },
+          { label: "오름", value: "오름" },
+          { label: "포토스팟", value: "포토스팟" },
+          { label: "숲", value: "숲" },
+          { label: "유네스코", value: "유네스코" },
+          { label: "마을관광", value: "마을관광" },
+          { label: "드라이브", value: "드라이브" },
+          { label: "반려동물동반_관광지", value: "반려동물동반_관광지" },
+        ],
+        c2: [
+          { label: "전체", value: "" },
+          { label: "럭셔리트래블인제주", value: "럭셔리트래블인제주" },
+          { label: "무장애관광", value: "무장애관광" },
+          { label: "관광기념품", value: "관광기념품" },
+          { label: "특산품", value: "특산품" },
+          { label: "전통시장", value: "전통시장" },
+          { label: "상점/상가", value: "상점/상가" },
+          { label: "오일장", value: "오일장" },
+          { label: "플리마켓", value: "플리마켓" },
+          { label: "면세점", value: "면세점" },
+        ],
+        c3: [
+          { label: "전체", value: "" },
+          { label: "착한가격업소", value: "착한가격업소" },
+          { label: "반려동물동반입장", value: "반려동물동반입장" },
+          { label: "럭셔리트래블인제주", value: "럭셔리트래블인제주" },
+          { label: "안전여행스탬프", value: "안전여행스탬프" },
+          { label: "우수관광사업체", value: "우수관광사업체" },
+          { label: "4성급호텔", value: "4성급호텔" },
+          { label: "5성급호텔", value: "5성급호텔" },
+          { label: "독채", value: "독채" },
+          { label: "가족호텔", value: "가족호텔" },
+          { label: "게스트하우스", value: "게스트하우스" },
+          { label: "농어촌민박", value: "농어촌민박" },
+          { label: "안전인증민박", value: "안전인증민박" },
+          { label: "리조트", value: "리조트" },
+          { label: "공공와이파이존", value: "공공와이파이존" },
+        ],
+        c4: [
+          { label: "전체", value: "" },
+          { label: "착한가격업소", value: "착한가격업소" },
+          { label: "반려동물동반입장", value: "반려동물동반입장" },
+          { label: "럭셔리트래블인제주", value: "럭셔리트래블인제주" },
+          { label: "안전여행스탬프", value: "안전여행스탬프" },
+          { label: "우수관광사업체", value: "우수관광사업체" },
+          { label: "무장애관광", value: "무장애관광" },
+          { label: "향토음식", value: "향토음식" },
+          { label: "한식", value: "한식" },
+          { label: "카페", value: "카페" },
+          { label: "해물뚝배기", value: "해물뚝배기" },
+          { label: "몸국", value: "몸국" },
+          { label: "해장국", value: "해장국" },
+          { label: "수제버거", value: "수제버거" },
+          { label: "흑돼지", value: "흑돼지" },
+          { label: "일식", value: "일식" },
+          { label: "해산물", value: "해산물" },
+        ],
+      },
+      regions: [
+        { label: "제주시", value: "제주시" },
+        { label: "서귀포시", value: "서귀포시" },
+      ],
+      subregions: {
+        제주시: [
+          { label: "제주시내", value: "제주시내" },
+          { label: "애월", value: "애월" },
+          { label: "한림", value: "한림" },
+          { label: "한경", value: "한경" },
+          { label: "조천", value: "조천" },
+          { label: "구좌", value: "구좌" },
+          { label: "우도", value: "우도" },
+          { label: "추자", value: "추자" },
+        ],
+        서귀포시: [
+          { label: "성산", value: "성산" },
+          { label: "서귀포시내", value: "서귀포시내" },
+          { label: "대정", value: "대정" },
+          { label: "안덕", value: "안덕" },
+          { label: "중문", value: "중문" },
+          { label: "남원", value: "남원" },
+          { label: "표선", value: "표선" },
+        ],
+      },
     };
   },
+  computed: {
+    filteredTags() {
+      return this.tags[this.type] || [];
+    },
+  },
   methods: {
-    toggleBox() {
-      this.showBox = !this.showBox;
+    toggleFilters() {
+      this.showFilters = !this.showFilters;
     },
-    setTag(tag) {
-      this.$emit('update-filter', { tag });
+    toggleTag(tag) {
+      this.selectedTag = this.selectedTag === tag ? "" : tag;
+      this.emitFilterUpdate();
     },
-    setRegion(reg1, reg2) {
-      this.$emit('update-filter', { reg1, reg2 });
+    toggleRegion(region) {
+      this.selectedRegion = this.selectedRegion === region ? "" : region;
+      this.selectedSubregion = ""; // 하위 지역 초기화
+      this.emitFilterUpdate();
     },
-    updateTitle() {
-      this.$emit('update-filter', { title: this.title });
+    toggleSubregion(subregion) {
+      this.selectedSubregion =
+        this.selectedSubregion === subregion ? "" : subregion;
+      this.emitFilterUpdate();
     },
-    debounceUpdateTitle() {
-      clearTimeout(this.debounceTimeout);
-      this.debounceTimeout = setTimeout(() => {
-        this.updateTitle();
-      }, 2000); // 2000ms 지연
-    },
-    updateType() {
-      this.$emit('update-filter', { type: this.selectedTypes });
-    },
-    toggleRegion() {
-      this.showRegion = !this.showRegion;
+    emitFilterUpdate() {
+      this.$emit("update-filter", {
+        tag: this.selectedTag,
+        reg1: this.selectedRegion,
+        reg2: this.selectedSubregion,
+        title: this.title,
+        type: this.type,
+      });
     },
   },
 };
 </script>
 
 <style scoped>
-#filterContainer {
-  width: 100%;
-  padding: 10px;
-  background: #f5f5f5;
-  border-bottom: 1px solid #ccc;
-}
-
-.toggle-button {
-  width: 100%;
-  padding: 10px;
-  background: #ccc;
-  border: none;
-  cursor: pointer;
-  text-align: left;
-}
-
-.search-box {
-  margin: 10px 0;
-}
-
-.type-box {
-  margin: 10px 0;
-}
-
-.tagBox {
+#filterWrapper {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.toggle-filters-button {
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #000;
+  border-radius: 20px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.filter-search {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.filter-search input {
+  width: 80%;
+  padding: 0.5rem;
+  border: 1px solid #000;
+  border-radius: 20px;
+  color: black;
+}
+
+.filter-label {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.filterGroup {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.tagBox,
+.regionBox,
+.subregionBox {
+  display: flex;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
-.tagBox input {
-  margin-right: 5px;
+.filter-button {
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #000;
+  border-radius: 20px;
+  background-color: white;
+  cursor: pointer;
 }
 
-.tagBox button {
-  margin-right: 10px;
-  margin-bottom: 10px;
+.filter-button.active {
+  background-color: orange;
+  color: white;
 }
 </style>

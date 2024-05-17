@@ -22,3 +22,9 @@ export { default as Blog } from "./Blog.vue";
 export { default as BlogDetails } from "./BlogDetails.vue";
 
 export { default as Contact } from "./Contact.vue";
+
+export { default as Spot } from "./Spot.vue";
+export { default as Tour } from "./Tour.vue";
+export { default as Food } from "./Food.vue";
+export { default as Shop } from "./Shop.vue";
+export { default as Lodge } from "./Lodge.vue";
