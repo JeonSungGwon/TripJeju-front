@@ -8,6 +8,7 @@ export { default as Team } from "./Team.vue";
 export { default as Festival } from "./Festival.vue";
 export { default as Price } from "./Price.vue";
 export { default as Faq } from "./Faq.vue";
+export { default as TripReview } from "./TripReview.vue";
 
 export { default as ServiceOne } from "./ServiceOne.vue";
 export { default as ServiceTwo } from "./ServiceTwo.vue";

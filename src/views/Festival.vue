@@ -11,11 +11,11 @@
 
       <div class="row">
         <div class="col-lg-3 col-md-6"
-          v-for="tm in team.slice(0,8)" :key="tm.id"
+          v-for="tm in team.slice(0,100)" :key="tm.id"
         >
           <div class="single-team-member">
             <div class="team-member-img">
-              <img :src="tm.imgPath" alt="" height="300" width="241">
+              <img :src="tm.imgPath" alt="" height="300" width="281">
             </div>
             <div class="team-content">
               <div class="team-title">
@@ -40,8 +40,7 @@
 <script setup>
 import { onMounted, ref} from 'vue'
 import axios from "axios";
-import { BreadCrumb, HeaderThree } from "../components";
-import HeaderOne from '@/components/header/HeaderOne.vue';
+import { BreadCrumb, HeaderOne } from "../components";
 
 const team = ref([]);
 const selectedMonth = ref("01"); // 기본값은 01로 설정

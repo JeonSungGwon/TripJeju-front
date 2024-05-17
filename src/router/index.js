@@ -2,7 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 
 import {
 	HomeOne, HomeTwo, HomeThree, About, ChooseUs, Team, Price, Faq, ServiceOne, ServiceTwo, ServiceDetails, Project, ProjectDetails, Blog, BlogDetails, Contact,
-	RedirectView, Festival
+	RedirectView, Festival, TripReview 
 	
   } from "../views";
 
@@ -98,7 +98,12 @@ const routes = [
 	{
 		path: "/index",
 		component: RedirectView
-	},				
+	},
+	{
+		path: "/tripReview",
+		name: "tripReview",
+		component: TripReview
+	},						
 		
 ];
 

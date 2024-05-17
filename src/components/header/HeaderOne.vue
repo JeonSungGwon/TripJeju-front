@@ -144,7 +144,7 @@ onMounted(() => {
 												<ul class="sub-menu">
 													<li>
 														<router-link
-															:to="{ name: 'service-1' }">여행지 후기</router-link>
+															:to="{ name: 'tripReview' }">여행지 후기</router-link>
 													</li>
 													<li>
 														<router-link

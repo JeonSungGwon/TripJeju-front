@@ -3528,8 +3528,8 @@ ul.team-social li a {
   
   .page-item:first-child .page-link {
 	display: inline-flex;
-	background: #FA4729;
-	border-color: #FA4729;
+	/* background: #FA4729;
+	border-color: #FA4729; */
 	border-radius: 0;
   }
   
