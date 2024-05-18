@@ -66,9 +66,25 @@ export default {
             (favorite) => favorite.placeId === spot.id
           );
 
+          let markerImage = 'marker_loc_default.png'; // 기본 마커 이미지
+          if (spot.type === 'c1') {
+            markerImage = 'marker_loc_1.png';
+          } else if (spot.type === 'c2') {
+            markerImage = 'marker_loc_2.png';
+          } else if (spot.type === 'c3') {
+            markerImage = 'marker_loc_3.png';
+          } else if (spot.type === 'c4') {
+            markerImage = 'marker_loc_4.png';
+          }
+
           const marker = new naver.maps.Marker({
             position: new naver.maps.LatLng(spot.latitude, spot.longitude),
             map: this.map,
+            icon: {
+              url: `/assets/img/${markerImage}`,
+              size: new naver.maps.Size(26, 35),
+              scaledSize: new naver.maps.Size(26, 35),
+            },
           });
 
           const contentString = [
