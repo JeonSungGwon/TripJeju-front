@@ -23,7 +23,7 @@
               </div>
               <div class="team-subtitle">
                 <p>{{ tm.sub_title }}</p>
-              </div>
+              </div>np
               <ul class="team-social">
                 <li><a href="#"><i class="fa fa-facebook-f" aria-hidden="true"></i> </a></li>
                 <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i> </a></li>

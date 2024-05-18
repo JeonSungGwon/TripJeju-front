@@ -149,6 +149,7 @@ export default {
       regions: [
         { label: "제주시", value: "제주시" },
         { label: "서귀포시", value: "서귀포시" },
+        { label: "섬 속의 섬", value: "섬 속의 섬" },
       ],
       subregions: {
         제주시: [
@@ -158,8 +159,6 @@ export default {
           { label: "한경", value: "한경" },
           { label: "조천", value: "조천" },
           { label: "구좌", value: "구좌" },
-          { label: "우도", value: "우도" },
-          { label: "추자", value: "추자" },
         ],
         서귀포시: [
           { label: "성산", value: "성산" },
@@ -170,6 +169,13 @@ export default {
           { label: "남원", value: "남원" },
           { label: "표선", value: "표선" },
         ],
+        '섬 속의 섬': [
+          { label: "우도", value: "우도" },
+          { label: "추자도", value: "추차도" },
+          { label: "마라도", value: "마라도" },
+          { label: "비양도", value: "비양도" },
+          { label: "가파도", value: "가파도" },
+        ]
       },
     };
   },
@@ -215,6 +221,7 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  margin-top: 1rem;
 }
 
 .toggle-filters-button {
