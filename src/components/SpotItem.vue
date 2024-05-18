@@ -1,7 +1,7 @@
 <template>
   <div class="spot-item">
-    <h3>{{ spot.title }}</h3>
-    <img :src="spot.imgPath" :alt="spot.title" style="width: 100%;">
+    <h5>{{ spot.title }}</h5>
+    <img :src="spot.thumbnailPath" :alt="spot.title" style="width: 100%;">
     <p>{{ spot.introduction }}</p>
   </div>
 </template>

@@ -25,4 +25,11 @@ export { default as Contact } from "./Contact.vue";
 
 
 export {default as ReviewBoard} from "./ReviewBoard.vue"
+
 export {default as MyPage} from "./MyPage.vue"
+
+export { default as Spot } from "./Spot.vue";
+export { default as Tour } from "./Tour.vue";
+export { default as Food } from "./Food.vue";
+export { default as Shop } from "./Shop.vue";
+export { default as Lodge } from "./Lodge.vue";

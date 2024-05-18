@@ -53,54 +53,56 @@ export default {
     },
     updateMarkers() {
       this.clearMarkers();
-      this.spots.forEach((spot) => {
-        const isFavorite = this.favoriteSpots.some(
-          (favorite) => favorite.placeId === spot.id
-        );
+      if (this.spots && this.spots.length > 0) {
+        this.spots.forEach((spot) => {
+          const isFavorite = this.favoriteSpots.some(
+            (favorite) => favorite.placeId === spot.id
+          );
 
-        const marker = new naver.maps.Marker({
-          position: new naver.maps.LatLng(spot.latitude, spot.longitude),
-          map: this.map,
+          const marker = new naver.maps.Marker({
+            position: new naver.maps.LatLng(spot.latitude, spot.longitude),
+            map: this.map,
+          });
+
+          const contentString = [
+            `<div class="iw_inner">`,
+            `   <h3>${spot.title}</h3>`,
+            `   <p>${spot.address}<br />`,
+            `       ${spot.phoneNumber} | ${spot.tag
+              .split(",")
+              .slice(0, 2)
+              .join(", ")}<br />`,
+            `       <img src="${spot.thumbnailPath}" width="300px" class="thumb" /><br />`,
+            `   </p>`,
+            `   <img src="/assets/img/${
+              isFavorite ? "favoriteOn.png" : "favoriteOff.png"
+            }" class="favorite-button" style="width: 32px; height: 32px; cursor: pointer;" />`,
+            `</div>`,
+          ].join("");
+
+          const infowindow = new naver.maps.InfoWindow({
+            content: contentString,
+          });
+
+          naver.maps.Event.addListener(marker, "click", () => {
+            if (infowindow.getMap()) {
+              infowindow.close();
+              this.$nextTick(() => {
+                const favoriteButton = document.querySelector(".favorite-button");
+                this.removeFavoriteListener(favoriteButton);
+              });
+            } else {
+              infowindow.open(this.map, marker);
+              this.$nextTick(() => {
+                const favoriteButton = document.querySelector(".favorite-button");
+                this.addFavoriteListener(favoriteButton, spot.id);
+              });
+            }
+          });
+
+          this.markers.push(marker);
         });
-
-        const contentString = [
-          `<div class="iw_inner">`,
-          `   <h3>${spot.title}</h3>`,
-          `   <p>${spot.address}<br />`,
-          `       ${spot.phoneNumber} | ${spot.tag
-            .split(",")
-            .slice(0, 2)
-            .join(", ")}<br />`,
-          `       <img src="${spot.thumbnailPath}" width="300px" class="thumb" /><br />`,
-          `   </p>`,
-          `   <img src="/assets/img/${
-            isFavorite ? "favoriteOn.png" : "favoriteOff.png"
-          }" class="favorite-button" style="width: 32px; height: 32px; cursor: pointer;" />`,
-          `</div>`,
-        ].join("");
-
-        const infowindow = new naver.maps.InfoWindow({
-          content: contentString,
-        });
-
-        naver.maps.Event.addListener(marker, "click", () => {
-          if (infowindow.getMap()) {
-            infowindow.close();
-            this.$nextTick(() => {
-              const favoriteButton = document.querySelector(".favorite-button");
-              this.removeFavoriteListener(favoriteButton);
-            });
-          } else {
-            infowindow.open(this.map, marker);
-            this.$nextTick(() => {
-              const favoriteButton = document.querySelector(".favorite-button");
-              this.addFavoriteListener(favoriteButton, spot.id);
-            });
-          }
-        });
-
-        this.markers.push(marker);
-      });
+      }
     },
     addFavoriteListener(favoriteButton, spotId) {
       this.removeFavoriteListener(favoriteButton); // Prevent duplicate listeners
