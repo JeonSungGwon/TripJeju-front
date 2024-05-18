@@ -56,6 +56,7 @@
   const newReviewTitle = ref('');
   const newReviewContent = ref('');
   const selectedFiles = ref([]);
+  const userId = ref(0);
   
   const openModal = () => {
     isModalOpen.value = true;
@@ -71,9 +72,10 @@
   
   const submitReview = () => {
     const formData = new FormData();
+    console.log(userId.value)
     const data = {
       spotId: id,
-      userId: 1,
+      userId: userId.value,
       title: newReviewTitle.value,
       content: newReviewContent.value
     };
@@ -109,8 +111,27 @@
         console.error('리뷰 목록을 가져오는 중 오류가 발생했습니다.', error.response.data);
       });
   };
+
+  const fetchUserData = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/users/myInfo', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+      }
+    });
+    console.log(response)
+    const userData = response.data;
+    userId.value = userData.id;
+    
+  } catch (error) {
+    console.error('Failed to fetch user data:', error);
+  }
+};
   
-  onMounted(fetchReviews);
+onMounted(() => {
+  fetchReviews();
+  fetchUserData(); // 사용자 데이터 가져오기
+});
   </script>
   
   <style scoped>

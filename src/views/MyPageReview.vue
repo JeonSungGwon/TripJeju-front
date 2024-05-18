@@ -70,16 +70,9 @@ const reviews = ref([]);
 const reviewsToShow = ref(5);  // 초기에 보여줄 리뷰 개수
 const profileImageUrl = ref('');
 const nickname = ref(''); 
+const userId = ref(0);
 
-const fetchReviews = async () => {
-  try {
-      const response = await axios.get('http://localhost:8080/post/user/1');
-      reviews.value = response.data;
-      reviewCount.value =  response.data.length;
-  } catch (error) {
-      console.error('Failed to fetch reviews:', error);
-  }
-};
+
 
 const fetchUserData = async () => {
   try {
@@ -92,11 +85,23 @@ const fetchUserData = async () => {
     const userData = response.data;
     profileImageUrl.value = userData.imageUrl;
     nickname.value = userData.nickname;
+    userId.value = userData.id;
+    
+    fetchReviews();
   } catch (error) {
     console.error('Failed to fetch user data:', error);
   }
 };
 
+const fetchReviews = async () => {
+  try {
+      const response = await axios.get(`http://localhost:8080/post/user/${userId.value}`);
+      reviews.value = response.data;
+      reviewCount.value =  response.data.length;
+  } catch (error) {
+      console.error('Failed to fetch reviews:', error);
+  }
+};
 
 const displayedReviews = computed(() => reviews.value.slice(0, reviewsToShow.value));
 const showMoreButton = computed(() => reviews.value.length > reviewsToShow.value);
@@ -106,7 +111,6 @@ const showMoreReviews = () => {
 };
 
 onMounted(() => {
-  fetchReviews();
   fetchUserData();
 });
 </script>
