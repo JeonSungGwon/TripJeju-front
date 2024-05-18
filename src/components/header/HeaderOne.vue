@@ -95,9 +95,9 @@ onMounted(() => {
 										id="navbarSupportedContent">
 										<ul class="navbar-nav m-auto">
 											<li class="nav-item">
-												<a class="nav-link" href="#">여행지
+												<router-link class="nav-link" :to="{ name: 'tour' }">여행지
 													<span class="sub-nav-toggler"> </span>
-												</a>
+												</router-link>
 												<ul class="sub-menu">
 													<li>
 														<router-link :to="{ name: 'tour' }">관광지</router-link>

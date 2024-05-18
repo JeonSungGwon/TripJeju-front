@@ -1,4 +1,6 @@
 <template>
+  <HeaderOne/>
+  <BreadCrumb/>
     <div>
       <SpotFilter @update-filter="updateFilter" type="c3" />
       <div id="container">
@@ -20,12 +22,15 @@
   </template>
   
   <script>
+  import { HeaderOne, BreadCrumb } from "../components";
   import SpotItem from "@/components/SpotItem.vue";
   import SpotMap from "@/components/SpotMap.vue";
   import SpotFilter from "@/components/SpotFilter.vue";
   
   export default {
     components: {
+      HeaderOne,
+      BreadCrumb,
       SpotItem,
       SpotMap,
       SpotFilter,
