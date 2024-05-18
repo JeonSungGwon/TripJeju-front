@@ -5,7 +5,10 @@ import {
   RedirectView, Festival, TripReview, ReviewBoard, Spot, Tour, Food, Lodge, Shop
 } from "../views";
 
-import MyPage from '@/views/MyPage.vue';
+import MyPageReview from '@/views/MyPageReview.vue';
+import MypageBookmark from '@/views/MypageBookmark.vue';
+import MypagePlan from '@/views/MypagePlan.vue';
+import MypageVisited from '@/views/MypageVisited.vue';
 
 const routes = [
   {
@@ -108,9 +111,24 @@ const routes = [
     component: ReviewBoard
   },
   {
-    path: "/myPage",
-    name: "myPage",
-    component: MyPage
+    path: "/myPageReview",
+    name: "myPageReview",
+    component: MyPageReview
+  },
+  {
+    path: "/myPageBookmark",
+    name: "myPageBookmark",
+    component: MypageBookmark
+  },
+  {
+    path: "/myPagePlan",
+    name: "myPagePlan",
+    component: MypagePlan
+  },
+  {
+    path: "/myPageVisited",
+    name: "myPageVisited",
+    component: MypageVisited
   },
   {
     path: "/spot",

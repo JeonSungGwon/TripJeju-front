@@ -76,7 +76,7 @@ onMounted(() => {
 					<div class="row align-items-center">
 						<div class="col-lg-3">
 							<div class="logo">
-								<router-link class="navbar-brand" to="/"><img src="/assets/img/jeju/logo.png" width="100" height="150"
+								<router-link class="navbar-brand" to="/"><img src="/assets/img/jeju/logo.png" height="100"
 										alt="" /></router-link>
 							</div>
 						</div>
@@ -160,16 +160,16 @@ onMounted(() => {
 												</a>
 												<ul class="sub-menu">
 													<li>
-														<router-link :to="{ name: 'project' }">나의 여행일정</router-link>
+														<router-link :to="{ name: 'myPagePlan' }">나의 여행일정</router-link>
 													</li>
 													<li>
-														<router-link :to="{ name: 'project-details' }">찜한 여행</router-link>
+														<router-link :to="{ name: 'myPageBookmark' }">찜한 여행</router-link>
 													</li>
 													<li>
-														<router-link :to="{ name: 'project-details' }">나의 리뷰</router-link>
+														<router-link :to="{ name: 'myPageReview' }">나의 리뷰</router-link>
 													</li>
 													<li>
-														<router-link :to="{ name: 'project-details' }">방문 여행지</router-link>
+														<router-link :to="{ name: 'myPageVisited' }">방문 여행지</router-link>
 													</li>
 												</ul>
 											</li>

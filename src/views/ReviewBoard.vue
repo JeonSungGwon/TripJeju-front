@@ -27,7 +27,7 @@
                 <h3 class="review-title">{{ review.title }}</h3>
               </div>
               <p class="review-content">{{ review.content }}</p>
-              <ul v-if="review.fileInfos.length > 0" class="image-list">
+              <ul v-if="review.fileInfos && review.fileInfos.length > 0" class="image-list">
                 <li v-for="(file, index) in review.fileInfos" :key="index" class="image-item">
                   <img :src="`http://localhost:8080/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`" class="review-image" />
                 </li>
