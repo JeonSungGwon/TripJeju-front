@@ -15,7 +15,7 @@
         >
           <div class="single-team-member">
             <div class="team-member-img">
-              <img :src="tm.imgPath" alt="" height="300" width="281">
+              <img :src="tm.thumbnailPath" alt="" height="300" width="281">
             </div>
             <div class="team-content">
               <div class="team-title">

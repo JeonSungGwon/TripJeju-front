@@ -22,3 +22,7 @@ export { default as Blog } from "./Blog.vue";
 export { default as BlogDetails } from "./BlogDetails.vue";
 
 export { default as Contact } from "./Contact.vue";
+
+
+export {default as ReviewBoard} from "./ReviewBoard.vue"
+export {default as MyPage} from "./MyPage.vue"

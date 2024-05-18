@@ -47,8 +47,8 @@ export default {
   data() {
     return {
       totalListItemCount: 0,
-      listRowCount: 10,
-      pageLinkCount: 10,
+      listRowCount: 12,
+      pageLinkCount: 12,
       currentPageIndex: 1,
 
       pageCount: 0,
