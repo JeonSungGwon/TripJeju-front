@@ -1,5 +1,5 @@
 <template>
-  <div class="spot-item">
+  <div class="spot-item" @click="openMarkerWindow">
     <h5>{{ spot.title }}</h5>
     <img :src="spot.thumbnailPath" :alt="spot.title" style="width: 100%;">
     <p>{{ spot.introduction }}</p>
@@ -13,6 +13,11 @@ export default {
       type: Object,
       required: true
     }
+  },
+  methods: {
+    openMarkerWindow() {
+      this.$emit('open-marker-window', this.spot.id);
+    }
   }
 }
 </script>
@@ -24,5 +29,6 @@ export default {
   margin-bottom: 10px;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div id="filterWrapper">
-    <button class="toggle-filters-button" @click="toggleFilters">
+    <button class="filter-button toggle-filters-button" @click="toggleFilters">
       {{ showFilters ? "필터 닫기" : "필터 열기" }}
     </button>
     <div v-if="showFilters">
@@ -225,12 +225,17 @@ export default {
 }
 
 .toggle-filters-button {
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   padding: 0.5rem 1rem;
-  border: 1px solid #000;
-  border-radius: 20px;
-  background-color: white;
+  border: none;
+  border-radius: 4px;
+  background-color: #f0f0f0;
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.toggle-filters-button:hover {
+  background-color: #e0e0e0;
 }
 
 .filter-search {
@@ -241,11 +246,19 @@ export default {
 }
 
 .filter-search input {
-  width: 80%;
+  width: 50%;
   padding: 0.5rem;
-  border: 1px solid #000;
-  border-radius: 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f0f0f0;
   color: black;
+  transition: background-color 0.3s, color 0.3s;
+  text-align: center;
+}
+
+.filter-search input:focus {
+  background-color: white;
+  outline: none;
 }
 
 .filter-label {
@@ -270,15 +283,16 @@ export default {
 
 .filter-button {
   margin: 0.5rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid #000;
-  border-radius: 20px;
-  background-color: white;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border: none;
 }
 
 .filter-button.active {
-  background-color: orange;
+  background-color: #ff5722;
   color: white;
 }
 </style>

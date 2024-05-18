@@ -5,18 +5,25 @@
     <SpotFilter @update-filter="updateFilter" type="c1" />
     <div id="container">
       <div id="mainContainer">
-        <div id="pagination">
-          <button @click="previousPage" :disabled="currentPage === 0">Previous</button>
-          <span>{{ currentPage + 1 }} of {{ totalPages }}</span>
-          <button @click="nextPage" :disabled="currentPage + 1 === totalPages">Next</button>
-        </div>
         <div class="content">
-          <SpotItem v-for="spot in spots" :key="spot.id" :spot="spot" />
+          <SpotItem 
+            v-for="spot in spots" 
+            :key="spot.id" 
+            :spot="spot" 
+            @open-marker-window="openMarkerWindow" 
+          />
         </div>
       </div>
       <div id="mapContainer">
-        <SpotMap :spots="spots" />
+        <SpotMap :spots="spots" :open-spot-id="openSpotId" />
       </div>
+    </div>
+    <div id="pagination">
+          <button @click="goToPage(0)" :disabled="currentPage === 0">First</button>
+          <button @click="changePageRange(-10)" :disabled="currentPage < 10">-10</button>
+          <span v-for="page in pageRange" :key="page" :class="{ active: page === currentPage + 1 }" @click="goToPage(page - 1)">{{ page }}</span>
+          <button @click="changePageRange(10)" :disabled="currentPage + 10 >= totalPages">+10</button>
+          <button @click="goToPage(totalPages - 1)" :disabled="currentPage + 1 === totalPages">Last</button>
     </div>
   </div>
 </template>
@@ -45,11 +52,18 @@ export default {
       reg1: '',
       reg2: '',
       title: '',
-      type: 'c1', // 관광지
+      type: 'c1',
+      openSpotId: null, // 현재 열려있는 스팟의 ID
+      pageRange: []
     };
   },
   mounted() {
     this.loadSpots();
+  },
+  watch: {
+    currentPage(newPage) {
+      this.updatePageRange();
+    }
   },
   methods: {
     updateFilter({ tag, reg1, reg2, title }) {
@@ -58,7 +72,7 @@ export default {
       this.reg2 = reg2;
       this.title = title;
 
-      this.currentPage = 0; // 필터가 변경되면 첫 페이지로 이동
+      this.currentPage = 0;
       this.loadSpots();
     },
     loadSpots() {
@@ -79,6 +93,7 @@ export default {
         .then(data => {
           this.spots = data.spots;
           this.totalPages = Math.ceil(data.total / this.pageSize);
+          this.updatePageRange();
         })
         .catch(error => {
           console.error("Error fetching spots:", error);
@@ -96,6 +111,27 @@ export default {
         this.loadSpots();
       }
     },
+    goToPage(page) {
+      this.currentPage = page;
+      this.loadSpots();
+    },
+    changePageRange(delta) {
+      this.currentPage += delta;
+      if (this.currentPage < 0) this.currentPage = 0;
+      if (this.currentPage >= this.totalPages) this.currentPage = this.totalPages - 1;
+      this.loadSpots();
+    },
+    updatePageRange() {
+      const start = Math.floor(this.currentPage / 10) * 10;
+      const end = Math.min(start + 10, this.totalPages);
+      this.pageRange = [];
+      for (let i = start; i < end; i++) {
+        this.pageRange.push(i + 1);
+      }
+    },
+    openMarkerWindow(spotId) {
+      this.openSpotId = spotId;
+    }
   },
 };
 </script>
@@ -122,9 +158,38 @@ export default {
 }
 
 #pagination {
-  position: sticky;
-  top: 0;
-  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+#pagination button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+#pagination span {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 2px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+#pagination span.active {
+  background-color: #ff5722;
+  color: white;
 }
 
 #mainContainer .content {

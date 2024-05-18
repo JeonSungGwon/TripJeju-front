@@ -6,13 +6,14 @@
 import axios from "axios";
 
 export default {
-  props: ["spots"],
+  props: ["spots", "openSpotId"],
   data() {
     return {
       id: null,
       map: null,
       markers: [],
-      favoriteSpots: [], // Store user's favorite spots
+      infowindows: [], // infowindow들을 저장할 배열
+      favoriteSpots: [],
     };
   },
   mounted() {
@@ -25,7 +26,7 @@ export default {
       })
       .then((response) => {
         this.id = response.data.id;
-        this.loadFavorites(); // Load favorite spots after getting user ID
+        this.loadFavorites();
       })
       .catch((error) => {
         console.error("Error fetching user info:", error);
@@ -39,13 +40,18 @@ export default {
       };
       this.map = new naver.maps.Map(this.$el, mapOptions);
       this.updateMarkers();
+
+      // Map 클릭 이벤트 추가
+      naver.maps.Event.addListener(this.map, 'click', () => {
+        this.closeAllInfoWindows();
+      });
     },
     loadFavorites() {
       axios
         .get(`http://localhost:8080/favorite/user/${this.id}`)
         .then((response) => {
           this.favoriteSpots = response.data;
-          this.updateMarkers(); // Update markers after loading favorites
+          this.updateMarkers();
         })
         .catch((error) => {
           console.error("Error fetching favorite spots:", error);
@@ -53,6 +59,7 @@ export default {
     },
     updateMarkers() {
       this.clearMarkers();
+      this.infowindows = [];
       if (this.spots && this.spots.length > 0) {
         this.spots.forEach((spot) => {
           const isFavorite = this.favoriteSpots.some(
@@ -92,6 +99,7 @@ export default {
                 this.removeFavoriteListener(favoriteButton);
               });
             } else {
+              this.closeAllInfoWindows(); // 다른 인포 윈도우 닫기
               infowindow.open(this.map, marker);
               this.$nextTick(() => {
                 const favoriteButton = document.querySelector(".favorite-button");
@@ -101,11 +109,12 @@ export default {
           });
 
           this.markers.push(marker);
+          this.infowindows.push({ id: spot.id, infowindow, marker });
         });
       }
     },
     addFavoriteListener(favoriteButton, spotId) {
-      this.removeFavoriteListener(favoriteButton); // Prevent duplicate listeners
+      this.removeFavoriteListener(favoriteButton);
       favoriteButton.listener = this.toggleFavorite.bind(
         this,
         spotId,
@@ -147,7 +156,6 @@ export default {
         }
       }
     },
-
     addFavorite(placeId, element) {
       axios
         .post("http://localhost:8080/favorite", {
@@ -157,18 +165,17 @@ export default {
         .then(() => {
           alert("Added to favorites!");
           element.src = "assets/img/favoriteOn.png";
-          this.loadFavorites(); // Reload favorites after adding
+          this.loadFavorites();
         })
         .catch((error) => console.error("Error adding to favorites:", error));
     },
-
     removeFavorite(favoriteId, element) {
       axios
         .delete(`http://localhost:8080/favorite/${favoriteId}`)
         .then(() => {
           alert("Removed from favorites!");
           element.src = "assets/img/favoriteOff.png";
-          this.loadFavorites(); // Reload favorites after removing
+          this.loadFavorites();
         })
         .catch((error) =>
           console.error("Error removing from favorites:", error)
@@ -178,6 +185,25 @@ export default {
       this.markers.forEach((marker) => marker.setMap(null));
       this.markers = [];
     },
+    closeAllInfoWindows() {
+      this.infowindows.forEach((iw) => {
+        iw.infowindow.close();
+      });
+    },
+    openInfoWindow(spotId) {
+      this.infowindows.forEach((iw) => {
+        if (iw.id === spotId) {
+          if (iw.infowindow.getMap()) {
+            iw.infowindow.close();
+          } else {
+            this.closeAllInfoWindows(); // 다른 인포 윈도우 닫기
+            iw.infowindow.open(this.map, iw.marker);
+          }
+        } else {
+          iw.infowindow.close();
+        }
+      });
+    }
   },
   watch: {
     spots: {
@@ -185,6 +211,9 @@ export default {
         this.updateMarkers();
       },
       deep: true,
+    },
+    openSpotId(newVal) {
+      this.openInfoWindow(newVal);
     },
   },
 };
