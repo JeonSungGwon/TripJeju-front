@@ -94,7 +94,7 @@
 const reviewCount = ref(0);
 const savedPlans = ref(0);
 const visitedPlaces = computed(() => totalListItemCount.value);
-const savedLocations = ref(6);
+const savedLocations = ref(0);
   // Pagination variables
   const listRowCount = 6;
   const currentPageIndex = ref(parseInt(route.query.no) || 1);
@@ -122,6 +122,8 @@ const userId = ref(0);
     userId.value = userData.id;
     
     fetchReviews();
+    fetchSpots();
+    fetchTotalItemCount();
   } catch (error) {
     console.error('Failed to fetch user data:', error);
   }
@@ -138,7 +140,7 @@ const fetchReviews = async () => {
   
   const fetchSpots = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/visit/user/1", {
+      const response = await axios.get(`http://localhost:8080/visit/user/${userId.value}`, {
         params: { size: listRowCount, page: currentPageIndex.value - 1 }  
       });
       team.value = response.data;
@@ -149,7 +151,7 @@ const fetchReviews = async () => {
   
   const fetchTotalItemCount = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/visit/user/count/1");
+      const response = await axios.get(`http://localhost:8080/visit/user/count/${userId.value}`);
       totalListItemCount.value = response.data;
     } catch (error) {
       console.error("Failed to fetch total item count:", error);
@@ -162,8 +164,6 @@ const fetchReviews = async () => {
   });
   
   onMounted(() => {
-    fetchSpots();
-    fetchTotalItemCount();
     fetchUserData();
   });
   </script>

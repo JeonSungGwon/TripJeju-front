@@ -36,7 +36,7 @@
     <div class="review-section">
       <h3>나의 리뷰</h3>
       <ul>
-        <li v-for="(review, index) in displayedReviews" :key="index">
+        <li v-for="(review, index) in displayedReviews" :key="index" class="review-item">
           <h4>{{ review.title }}</h4>
           <p>{{ review.content }}</p>
           <ul v-if="review.fileInfos && review.fileInfos.length > 0" class="image-list">
@@ -44,9 +44,14 @@
                 <img :src="`http://localhost:8080/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`" class="review-image" />
               </li>
           </ul>
+          <!-- 삭제 버튼 -->
+          <button v-if="review.userId === userId" @click="deleteReview(review.id)" class="delete-button">삭제</button>
         </li>
       </ul>
-      <button v-if="showMoreButton" @click="showMoreReviews">더보기</button>
+      <div class="center">
+        <!-- 더보기 버튼 -->
+        <button v-if="showMoreButton" @click="showMoreReviews">더보기</button>
+      </div>
     </div>
     <div class="new-section">
       <h3>새로운 섹션</h3>
@@ -64,15 +69,14 @@ const userName = '전성권';
 const travelPlans = ref(0);
 const reviewCount = ref(0);
 const savedPlans = ref(0);
-const visitedPlaces = ref(0);
-const savedLocations = ref(6);
+const visitedPlaces = computed(() => totalListItemCount.value);
+const savedLocations = ref(0);
 const reviews = ref([]);
 const reviewsToShow = ref(5);  // 초기에 보여줄 리뷰 개수
 const profileImageUrl = ref('');
 const nickname = ref(''); 
 const userId = ref(0);
-
-
+const totalListItemCount = ref(0);
 
 const fetchUserData = async () => {
   try {
@@ -81,7 +85,6 @@ const fetchUserData = async () => {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`
       }
     });
-    console.log(response)
     const userData = response.data;
     profileImageUrl.value = userData.imageUrl;
     nickname.value = userData.nickname;
@@ -92,6 +95,15 @@ const fetchUserData = async () => {
     console.error('Failed to fetch user data:', error);
   }
 };
+
+const fetchTotalItemCount = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/visit/user/count/1");
+      totalListItemCount.value = response.data;
+    } catch (error) {
+      console.error("Failed to fetch total item count:", error);
+    }
+  };
 
 const fetchReviews = async () => {
   try {
@@ -110,8 +122,19 @@ const showMoreReviews = () => {
   reviewsToShow.value += 5;  // 더보기 버튼 클릭 시 5개 더 보여주기
 };
 
+const deleteReview = async (reviewId) => {
+  try {
+    await axios.delete(`http://localhost:8080/post/${reviewId}`);
+    reviews.value = reviews.value.filter(review => review.id !== reviewId);
+    reviewCount.value -= 1;
+  } catch (error) {
+    console.error('리뷰 삭제 중 오류가 발생했습니다.', error);
+  }
+};
+
 onMounted(() => {
   fetchUserData();
+  fetchTotalItemCount();
 });
 </script>
 
@@ -125,7 +148,6 @@ onMounted(() => {
   padding: 20px;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
 }
-
 .profile-section, .stats-section, .review-section, .new-section {
   width: 100%;
   margin-bottom: 30px;
@@ -153,6 +175,7 @@ onMounted(() => {
 }
 
 .review-section li {
+  position: relative; /* 부모 요소를 상대 위치로 설정 */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -174,19 +197,20 @@ onMounted(() => {
   font-size: 16px;
 }
 
-.review-section button {
-  display: block;
-  margin: 0 auto;
-  padding: 10px 20px;
-  background-color: #333;
+.review-section .delete-button {
+  position: absolute; /* 삭제 버튼의 위치를 절대로 설정 */
+  top: 10px; /* 원하는 위치로 조절 (위치 조절 값은 상황에 따라 변경 가능) */
+  right: 10px; /* 원하는 위치로 조절 (위치 조절 값은 상황에 따라 변경 가능) */
+  background-color: #ff5a5f;
   color: #fff;
   border: none;
   border-radius: 5px;
+  padding: 5px 10px;
   cursor: pointer;
 }
 
-.review-section button:hover {
-  background-color: #555;
+.review-section .delete-button:hover {
+  background-color: #ff3b3f;
 }
 
 .image-list {
@@ -224,5 +248,18 @@ h3 {
 p {
   color: #666;
   font-size: 16px;
+}
+.center {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.center button {
+  background-color: gray; /* 파란색 */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
 }
 </style>
