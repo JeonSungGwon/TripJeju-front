@@ -3,10 +3,9 @@
     <div class="container">
       <div class="profile-section">
         <div class="profile">
-          <img src="" alt="Profile Image">
+          <img :src="profileImageUrl" alt="Profile Image">
           <div>
-            <h2>{{ userName }}님의 제주여행</h2>
-            <p>성산일출봉</p>
+            <h2>{{ nickname }}님의 제주여행</h2>
           </div>
         </div>
       </div>
@@ -18,7 +17,7 @@
           </div>
           <div>
             <p>나의 리뷰</p>
-            <p>{{ favoritePlaces }}</p>
+            <p>{{ reviewCount }}</p>
           </div>
           <div>
             <p>방문 여행지</p>
@@ -35,11 +34,16 @@
         </div>
       </div>
       <div class="review-section">
-        <h3>찜한 여행지</h3>
+        <h3>나의 리뷰</h3>
         <ul>
           <li v-for="(review, index) in displayedReviews" :key="index">
             <h4>{{ review.title }}</h4>
             <p>{{ review.content }}</p>
+            <ul v-if="review.fileInfos && review.fileInfos.length > 0" class="image-list">
+                <li v-for="(file, index) in review.fileInfos" :key="index" class="image-item">
+                  <img :src="`http://localhost:8080/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`" class="review-image" />
+                </li>
+            </ul>
           </li>
         </ul>
         <button v-if="showMoreButton" @click="showMoreReviews">더보기</button>
@@ -58,19 +62,44 @@
   
   const userName = '전성권';
   const travelPlans = ref(0);
-  const favoritePlaces = ref(0);
+  const reviewCount = ref(0);
   const savedPlans = ref(0);
   const visitedPlaces = ref(0);
   const savedLocations = ref(6);
   const reviews = ref([]);
   const reviewsToShow = ref(5);  // 초기에 보여줄 리뷰 개수
+  const profileImageUrl = ref('');
+  const nickname = ref(''); 
+  const userId = ref(0);
+  
+  
+  
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/users/myInfo', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
+      });
+      console.log(response)
+      const userData = response.data;
+      profileImageUrl.value = userData.imageUrl;
+      nickname.value = userData.nickname;
+      userId.value = userData.id;
+      
+      fetchReviews();
+    } catch (error) {
+      console.error('Failed to fetch user data:', error);
+    }
+  };
   
   const fetchReviews = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/post/user/1');
-      reviews.value = response.data;
+        const response = await axios.get(`http://localhost:8080/post/user/${userId.value}`);
+        reviews.value = response.data;
+        reviewCount.value =  response.data.length;
     } catch (error) {
-      console.error('Failed to fetch reviews:', error);
+        console.error('Failed to fetch reviews:', error);
     }
   };
   
@@ -82,7 +111,7 @@
   };
   
   onMounted(() => {
-    fetchReviews();
+    fetchUserData();
   });
   </script>
   
@@ -158,6 +187,32 @@
   
   .review-section button:hover {
     background-color: #555;
+  }
+  
+  .image-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .image-item {
+    width: 100px; /* 아이템의 너비를 조절하여 이미지 크기 조절 */
+    height: 100px; /* 아이템의 높이를 조절하여 이미지 크기 조절 */
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .image-item img:hover {
+    transform: scale(1.05);
   }
   
   h3 {
