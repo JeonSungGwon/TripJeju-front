@@ -47,6 +47,7 @@ const props = defineProps({
   searchTerm: String
 })
 
+
 const totalListItemCount = ref(0)
 const listRowCount = ref(12)
 const pageLinkCount = ref(12)
