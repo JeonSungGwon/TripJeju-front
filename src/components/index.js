@@ -52,3 +52,6 @@ export { default as FeatureProject } from "./FeatureProject.vue";
 export { default as SpotFilter } from "./SpotFilter.vue";
 export { default as SpotItem } from "./SpotItem.vue";
 export { default as SpotMap } from "./SpotMap.vue";
+
+export { default as RouteItem } from "./RouteItem.vue";
+export { default as RouteMap } from "./RouteMap.vue";

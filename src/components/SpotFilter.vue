@@ -289,6 +289,7 @@ export default {
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
   border: none;
+  color: black;
 }
 
 .filter-button.active {

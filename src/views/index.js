@@ -33,3 +33,4 @@ export { default as Tour } from "./Tour.vue";
 export { default as Food } from "./Food.vue";
 export { default as Shop } from "./Shop.vue";
 export { default as Lodge } from "./Lodge.vue";
+export { default as Route } from "./Route.vue";

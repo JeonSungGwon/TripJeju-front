@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import {
   HomeOne, HomeTwo, HomeThree, About, ChooseUs, Team, Price, Faq, ServiceOne, ServiceTwo, ServiceDetails, Project, ProjectDetails, Blog, BlogDetails, Contact,
-  RedirectView, Festival, TripReview, ReviewBoard, Spot, Tour, Food, Lodge, Shop
+  RedirectView, Festival, TripReview, ReviewBoard, Spot, Tour, Food, Lodge, Shop, Route
 } from "../views";
 
 import MyPageReview from '@/views/MyPageReview.vue';
@@ -154,6 +154,11 @@ const routes = [
     path: "/shop",
     name: "shop",
     component: Shop
+  },
+  {
+    path: "/route",
+    name:"route",
+    component: Route
   }
 ];
 
