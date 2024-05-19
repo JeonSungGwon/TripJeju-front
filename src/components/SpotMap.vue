@@ -66,9 +66,25 @@ export default {
             (favorite) => favorite.placeId === spot.id
           );
 
+          let markerImage = 'marker_loc_default.png'; // 기본 마커 이미지
+          if (spot.type === 'c1') {
+            markerImage = 'marker_loc_1.png';
+          } else if (spot.type === 'c2') {
+            markerImage = 'marker_loc_2.png';
+          } else if (spot.type === 'c3') {
+            markerImage = 'marker_loc_3.png';
+          } else if (spot.type === 'c4') {
+            markerImage = 'marker_loc_4.png';
+          }
+
           const marker = new naver.maps.Marker({
             position: new naver.maps.LatLng(spot.latitude, spot.longitude),
             map: this.map,
+            icon: {
+              url: `/assets/img/${markerImage}`,
+              size: new naver.maps.Size(26, 35),
+              scaledSize: new naver.maps.Size(26, 35),
+            },
           });
 
           const contentString = [
@@ -83,7 +99,7 @@ export default {
             `   </p>`,
             `   <img src="/assets/img/${
               isFavorite ? "favoriteOn.png" : "favoriteOff.png"
-            }" class="favorite-button" style="width: 32px; height: 32px; cursor: pointer;" />`,
+            }" class="favorite-button" style="width: 32px; height: 32px; cursor: pointer;" data-spot-id="${spot.id}" />`,
             `</div>`,
           ].join("");
 
@@ -94,15 +110,11 @@ export default {
           naver.maps.Event.addListener(marker, "click", () => {
             if (infowindow.getMap()) {
               infowindow.close();
-              this.$nextTick(() => {
-                const favoriteButton = document.querySelector(".favorite-button");
-                this.removeFavoriteListener(favoriteButton);
-              });
             } else {
               this.closeAllInfoWindows(); // 다른 인포 윈도우 닫기
               infowindow.open(this.map, marker);
               this.$nextTick(() => {
-                const favoriteButton = document.querySelector(".favorite-button");
+                const favoriteButton = document.querySelector(`.favorite-button[data-spot-id="${spot.id}"]`);
                 this.addFavoriteListener(favoriteButton, spot.id);
               });
             }
@@ -164,7 +176,7 @@ export default {
         })
         .then(() => {
           alert("Added to favorites!");
-          element.src = "assets/img/favoriteOn.png";
+          element.src = "/assets/img/favoriteOn.png";
           this.loadFavorites();
         })
         .catch((error) => console.error("Error adding to favorites:", error));
@@ -174,7 +186,7 @@ export default {
         .delete(`http://localhost:8080/favorite/${favoriteId}`)
         .then(() => {
           alert("Removed from favorites!");
-          element.src = "assets/img/favoriteOff.png";
+          element.src = "/assets/img/favoriteOff.png";
           this.loadFavorites();
         })
         .catch((error) =>
@@ -198,6 +210,10 @@ export default {
           } else {
             this.closeAllInfoWindows(); // 다른 인포 윈도우 닫기
             iw.infowindow.open(this.map, iw.marker);
+            this.$nextTick(() => {
+              const favoriteButton = document.querySelector(`.favorite-button[data-spot-id="${spotId}"]`);
+              this.addFavoriteListener(favoriteButton, spotId);
+            });
           }
         } else {
           iw.infowindow.close();
