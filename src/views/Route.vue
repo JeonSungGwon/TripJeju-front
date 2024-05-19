@@ -33,14 +33,18 @@
         <span v-if="startPoint">{{ getSpotTitle(startPoint) }}</span>
       </div>
       <div>
-        <strong>End:</strong>
-        <span v-if="endPoint">{{ getSpotTitle(endPoint) }}</span>
-      </div>
-      <div>
         <strong>Waypoints:</strong>
         <span v-for="(waypoint, index) in waypoints" :key="index">
           {{ getSpotTitle(waypoint) }}<span v-if="index < waypoints.length - 1">, </span>
         </span>
+      </div>
+      <div>
+        <strong>End:</strong>
+        <span v-if="endPoint">{{ getSpotTitle(endPoint) }}</span>
+      </div>
+      <div id="saveRoute">
+        <input type="text" v-model="routeName" placeholder="Enter route name" />
+        <button @click="saveRoute">Save Route</button>
       </div>
       <button @click="searchRoute">Search Route</button>
     </div>
@@ -69,6 +73,7 @@ export default {
       startPoint: null,
       endPoint: null,
       waypoints: [],
+      routeName: "", // 새로운 데이터 속성 추가
     };
   },
   mounted() {
@@ -124,7 +129,7 @@ export default {
       this.endPoint = spotId;
     },
     addWaypoint(spotId) {
-      if (this.waypoints.length < 13 && !this.waypoints.includes(spotId)) {
+      if (this.waypoints.length <= 15 && !this.waypoints.includes(spotId)) {
         this.waypoints.push(spotId);
       }
     },
@@ -144,9 +149,8 @@ export default {
         return `${spot.longitude},${spot.latitude}`;
       });
 
-      const apiType = waypoints.length + 2 <= 5 ? "" : "-15"; // Determine whether to use API 5 or 15
+      const apiType = waypoints.length <= 5 ? "" : "-15"; // Determine whether to use API 5 or 15
 
-      // 네이버 지도 Directions API를 호출하여 경로를 검색합니다.
       axios
         .get(`/api/map-direction${apiType}/v1/driving`, {
           params: {
@@ -165,6 +169,51 @@ export default {
         })
         .catch((error) => {
           console.error("Error fetching route:", error);
+        });
+    },
+    saveRoute() {
+      if (!this.routeName) {
+        alert("Please enter a route name.");
+        return;
+      }
+
+      const travelRoute = {
+        userId: this.userId,
+        routeName: this.routeName,
+      };
+
+      axios
+        .post("http://localhost:8080/travel-route", travelRoute)
+        .then((response) => {
+          const routeId = response.data.id;
+          this.saveRouteDetails(routeId);
+        })
+        .catch((error) => {
+          console.error("Error saving travel route:", error);
+        });
+    },
+    saveRouteDetails(routeId) {
+      const routeDetails = [];
+      if (this.startPoint) {
+        routeDetails.push({ routeId, placeId: this.startPoint, sequence: 0 }); // 출발 0
+      }
+      this.waypoints.forEach((spotId, index) => {
+        routeDetails.push({ routeId, placeId: spotId, sequence: index + 1 });
+      });
+      if (this.endPoint) {
+        routeDetails.push({ routeId, placeId: this.endPoint, sequence: -1 }); // 도착 -1
+      }
+
+      const saveDetail = (detail) => {
+        return axios.post("http://localhost:8080/route-detail", detail);
+      };
+
+      Promise.all(routeDetails.map(saveDetail))
+        .then(() => {
+          alert("Route saved successfully!");
+        })
+        .catch((error) => {
+          console.error("Error saving route details:", error);
         });
     },
   },
@@ -202,6 +251,21 @@ export default {
 
 #routeOptions div {
   margin: 5px 0;
+}
+
+#saveRoute {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10px;
+}
+
+input[type="text"] {
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: black;
 }
 
 button {

@@ -3,9 +3,9 @@
     <h5>{{ spot.title }}</h5>
     <img :src="spot.thumbnailPath" :alt="spot.title" style="width: 100%;" />
     <p>{{ spot.introduction }}</p>
-    <button @click="setStart">Set as Start</button>
-    <button @click="setEnd">Set as End</button>
-    <button @click="addWaypoint">Add as Waypoint</button>
+    <button @click="setStart">시작</button>
+    <button @click="addWaypoint">경유</button>
+    <button @click="setEnd">도착</button>
   </div>
   <div v-else class="spot-item">
     Loading...
