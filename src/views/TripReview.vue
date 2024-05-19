@@ -3,7 +3,7 @@
   <BreadCrumb/>
   <div class="team-area gray-bg section-padding">
     <div class="container">           
-      <input type="text" v-model="searchTerm" placeholder="Search by title...">
+      <input type="text" v-model="searchTerm" placeholder="Search by title..." class="search-input">
       <div class="row">
         <div class="col-lg-3 col-md-6" v-for="tm in filteredTeam" :key="tm.id">
           <div class="single-team-member">
@@ -25,9 +25,8 @@
             </div>
           </div>
         </div>
-        <!--<router-view /> -->
-        <page-link />
       </div>
+      <page-link :searchTerm="searchTerm" />
     </div>
   </div>
 </template>
@@ -47,11 +46,11 @@ const searchTerm = ref('');
 
 onMounted(initComponent);
 watch(() => route.query, initComponent);
-watch(searchTerm, updateFilteredTeam);
+watch(searchTerm, initComponent);
 
 async function initComponent() {
   const { data: fetchedTeam } = await axios.get(`http://localhost:8080/spots`,{
-    params: { size: pageLimit, page: `${route.query.no - pageLimit}` }
+    params: { size: pageLimit, page: `${route.query.no - pageLimit} `, search: searchTerm.value }
   });
   team.value = fetchedTeam;
 }
@@ -62,11 +61,11 @@ const filteredTeam = computed(() => {
   });
 });
 
-function updateFilteredTeam() {
-  // No need to do anything here, computed property takes care of filtering.
-}
 </script>
 
 <style scoped>
-/* 추가적인 스타일링이 필요한 경우 여기에 작성하세요 */
+.search-input {
+  color: black;
+  /* 필요한 경우 다른 스타일을 추가할 수 있습니다 */
+}
 </style>

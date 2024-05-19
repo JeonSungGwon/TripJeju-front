@@ -23,7 +23,6 @@
         @click="movePage(startPageIndex + index - 1)"
         >{{ startPageIndex + index - 1 }}</router-link
       >
-      <!-- <a class="page-link" href="javascript:movePage(' + i + ')">' + i + '</a> -->
     </li>
 
     <li class="page-item" v-if="next">
@@ -39,92 +38,86 @@
   </ul>
 </template>
 
-<script>
+<script setup>
 import axios from 'axios'
+import { ref, watch, defineProps, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-export default {
-  name: 'row',
-  data() {
-    return {
-      totalListItemCount: 0,
-      listRowCount: 12,
-      pageLinkCount: 12,
-      currentPageIndex: 1,
+const props = defineProps({
+  searchTerm: String
+})
 
-      pageCount: 0,
-      startPageIndex: 0,
-      endPageIndex: 0,
-      prev: false,
-      next: false
-    }
-  },
-  methods: {
-    movePage(param) {
-      this.currentPageIndex = param
-      this.initComponent()
-    },
+const totalListItemCount = ref(0)
+const listRowCount = ref(12)
+const pageLinkCount = ref(12)
+const currentPageIndex = ref(1)
+const pageCount = ref(0)
+const startPageIndex = ref(0)
+const endPageIndex = ref(0)
+const prev = ref(false)
+const next = ref(false)
 
-    initComponent() {
-      axios
-        .get('http://localhost:8080/spots/count')
-        .then(({ data }) => {
-          this.totalListItemCount = data
+const router = useRouter()
 
-          this.initUI()
-        })
-        .catch(() => {
-          alert('에러가 발생했습니다.')
-        })
-    },
-    initUI() {
-      this.pageCount = Math.ceil(this.totalListItemCount / this.listRowCount)
-
-      if (this.currentPageIndex % this.pageLinkCount == 0) {
-        this.startPageIndex =
-          (this.currentPageIndex / this.pageLinkCount - 1) * this.pageLinkCount + 1
-      } else {
-        this.startPageIndex =
-          Math.floor(this.currentPageIndex / this.pageLinkCount) * this.pageLinkCount + 1
-      }
-
-      if (this.currentPageIndex % this.pageLinkCount == 0) {
-        //10, 20...맨마지막
-        this.endPageIndex =
-          (this.currentPageIndex / this.pageLinkCount - 1) * this.pageLinkCount + this.pageLinkCount
-      } else {
-        this.endPageIndex =
-          Math.floor(this.currentPageIndex / this.pageLinkCount) * this.pageLinkCount +
-          this.pageLinkCount
-      }
-
-      if (this.endPageIndex > this.pageCount) {
-        this.endPageIndex = this.pageCount
-      }
-
-      if (this.currentPageIndex <= this.pageLinkCount) {
-        this.prev = false
-      } else {
-        this.prev = true
-      }
-
-      if (this.endPageIndex >= this.pageCount) {
-        this.endPageIndex = this.pageCount
-        this.next = false
-      } else {
-        this.next = true
-      }
-    }
-  },
-  watch: {
-    currentPageIndex: function () {
-      this.initUI()
-    }
-  },
-  created() {
-    this.initComponent()
-  },
-  mounted() {
-    this.$router.push('tripReview?no=' + this.listRowCount)
-  }
+const movePage = (param) => {
+  currentPageIndex.value = param
+  initComponent()
 }
+
+const initComponent = () => {
+  axios
+    .get('http://localhost:8080/spots/count', {
+      params: { search: props.searchTerm }
+    })
+    .then(({ data }) => {
+      totalListItemCount.value = data
+      initUI()
+    })
+    .catch(() => {
+      alert('에러가 발생했습니다.')
+    })
+}
+
+const initUI = () => {
+  pageCount.value = Math.ceil(totalListItemCount.value / listRowCount.value)
+
+  if (currentPageIndex.value % pageLinkCount.value === 0) {
+    startPageIndex.value =
+      (currentPageIndex.value / pageLinkCount.value - 1) * pageLinkCount.value + 1
+  } else {
+    startPageIndex.value =
+      Math.floor(currentPageIndex.value / pageLinkCount.value) * pageLinkCount.value + 1
+  }
+
+  if (currentPageIndex.value % pageLinkCount.value === 0) {
+    endPageIndex.value =
+      (currentPageIndex.value / pageLinkCount.value - 1) * pageLinkCount.value + pageLinkCount.value
+  } else {
+    endPageIndex.value =
+      Math.floor(currentPageIndex.value / pageLinkCount.value) * pageLinkCount.value +
+      pageLinkCount.value
+  }
+
+  if (endPageIndex.value > pageCount.value) {
+    endPageIndex.value = pageCount.value
+  }
+
+  prev.value = currentPageIndex.value > pageLinkCount.value
+  next.value = endPageIndex.value < pageCount.value
+}
+
+watch(currentPageIndex, initUI)
+
+watch(() => props.searchTerm, () => {
+  initComponent();
+})
+
+// function updateFilteredTeam(newValue) {
+//   console.log("Search term changed:", newValue);
+// }
+
+onMounted(() => {
+  initComponent()
+  router.push({ path: 'tripReview', query: { no: listRowCount.value } })
+})
 </script>
