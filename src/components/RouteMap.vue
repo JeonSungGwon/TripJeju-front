@@ -6,13 +6,22 @@
 import axios from "axios";
 
 export default {
-  props: ["spots", "openSpotId", "startPoint", "endPoint", "waypoints"],
+  props: ["spots", "openSpotId", "startPoint", "endPoint", "waypoints", "routeDetails", "routePath"],
   data() {
     return {
       map: null,
       markers: [],
       infowindows: [],
-      routePath: null,
+      routePolyline: null,
+      markerIcons: {
+        start: "/assets/img/icon_navi89_directions.png",
+        end: "/assets/img/icon_navi88_directions.png",
+        waypoint1: "/assets/img/icon_navi87_1_directions.png",
+        waypoint2: "/assets/img/icon_navi87_2_directions.png",
+        waypoint3: "/assets/img/icon_navi87_3_directions.png",
+        waypoint4: "/assets/img/icon_navi87_4_directions.png",
+        waypoint5: "/assets/img/icon_navi87_5_directions.png"
+      }
     };
   },
   mounted() {
@@ -30,11 +39,30 @@ export default {
     updateMarkers() {
       this.clearMarkers();
       this.infowindows = [];
-      if (this.spots && this.spots.length > 0) {
-        this.spots.forEach((spot) => {
+      if (this.routeDetails && this.routeDetails.length > 0) {
+        this.routeDetails.forEach((point) => {
+          const spot = this.spots.find((spot) => spot.id === point.placeId);
+          if (!spot) return;
+
+          let icon = '';
+          if (point.type === 'start') {
+            icon = this.markerIcons.start;
+          } else if (point.type === 'end') {
+            icon = this.markerIcons.end;
+          } else if (point.type === 'waypoint') {
+            const waypointIndex = this.routeDetails.filter(p => p.type === 'waypoint').indexOf(point) + 1;
+            icon = this.markerIcons[`waypoint${waypointIndex}`];
+          }
+
           const marker = new naver.maps.Marker({
             position: new naver.maps.LatLng(spot.latitude, spot.longitude),
             map: this.map,
+            icon: {
+              url: icon,
+              size: new naver.maps.Size(25, 35),
+              origin: new naver.maps.Point(0, 0),
+              anchor: new naver.maps.Point(12, 12),
+            }
           });
 
           const tags = spot.tag ? spot.tag.split(",").slice(0, 2).join(", ") : "";
@@ -89,17 +117,20 @@ export default {
         }
       });
     },
-    drawRoute(route) {
-      if (this.routePath) {
-        this.routePath.setMap(null);
+    drawRoute(path) {
+      if (this.routePolyline) {
+        this.routePolyline.setMap(null);
       }
-      const path = route.map((point) => new naver.maps.LatLng(point[1], point[0]));
-      this.routePath = new naver.maps.Polyline({
-        map: this.map,
-        path: path,
-        strokeColor: "#5347AA",
-        strokeWeight: 6,
-      });
+
+      if (path && path.length > 0) {
+        this.routePolyline = new naver.maps.Polyline({
+          map: this.map,
+          path: path,
+          strokeColor: "#E16639",
+          strokeWeight: 6,
+        });
+        this.map.setCenter(path[0]);
+      }
     },
   },
   watch: {
@@ -112,6 +143,15 @@ export default {
     openSpotId(newVal) {
       this.openInfoWindow(newVal);
     },
+    routeDetails: {
+      handler() {
+        this.updateMarkers();
+      },
+      deep: true,
+    },
+    routePath(newVal) {
+      this.drawRoute(newVal);
+    }
   },
 };
 </script>

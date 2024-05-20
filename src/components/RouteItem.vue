@@ -27,7 +27,7 @@ export default {
       spot: null,
     };
   },
-  mounted() {
+  mounted() { 
     this.loadSpotDetails();
   },
   methods: {
