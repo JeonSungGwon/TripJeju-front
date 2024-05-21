@@ -8,14 +8,14 @@ TestimonialOne, ChooseOne, BlogOne, CTAOne, } from "../components";
 <template>
     <HeaderOne/>
     <HeroOne/>
-    <AboutOne/>
-    <ServicesOne/>
-    <FeatureOne/>
+    <!-- <AboutOne/>
+    <ServicesOne/> -->
+    <!-- <FeatureOne/>
     <CounterOne/>
     <ProjectOne/>
     <TestimonialOne/>
-    <ChooseOne/>
-    <BlogOne/>
-    <CTAOne/>
+    <ChooseOne/> -->
+    <!-- <BlogOne/> -->
+    <!-- <CTAOne/> -->
     
 </template>
