@@ -1,7 +1,52 @@
 <template>
-  <HeaderOne />
-  <BreadCrumb />
   <div>
+    <HeaderOne />
+    <BreadCrumb />
+    <div>
+      <div>
+        <label for="title"><strong>제목:</strong></label>
+        <input type="text" id="title" v-model="travelRoute.title" />
+      </div>
+      <div>
+        <label for="startAt"><strong>출발일:</strong></label>
+        <input type="date" id="startAt" v-model="travelRoute.startAt" @change="updateDays" />
+      </div>
+      <div>
+        <label for="finishAt"><strong>도착일:</strong></label>
+        <input type="date" id="finishAt" v-model="travelRoute.finishAt" @change="updateDays" />
+      </div>
+      <div>
+        <label for="selectedDay"><strong>날짜 선택:</strong></label>
+        <select id="selectedDay" v-model="selectedDay" @change="updateSelectedDay">
+          <option v-for="(day, index) in days" :key="index" :value="index">{{ index + 1 }}일차</option>
+        </select>
+      </div>
+      <div v-for="(day, index) in days" :key="index">
+        <h3>{{ index + 1 }}일차</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>출발</th>
+              <th>장소명</th>
+              <th>출발시간</th>
+              <th>도착시간</th>
+              <th>삭제버튼</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(point, idx) in sortedRouteDetails[index]" :key="idx">
+              <td>{{ point.type }}</td>
+              <td>{{ getSpotTitle(point.placeId) }}</td>
+              <td><input type="time" v-model="point.startTime" /></td>
+              <td><input type="time" v-model="point.finishTime" /></td>
+              <td><button @click="removePoint(index, idx)">삭제</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button @click="showRoute(index)">경로 보기</button>
+      </div>
+      <button @click="saveRoute" :disabled="!isDateSet">일정 만들기</button>
+    </div>
     <div id="container">
       <div id="mainContainer">
         <div class="content">
@@ -10,9 +55,9 @@
             :key="spotId"
             :spot-id="spotId"
             @open-marker-window="openMarkerWindow"
-            @set-start="setStart"
-            @set-end="setEnd"
-            @add-waypoint="addWaypoint"
+            @set-start="addPoint('start', spotId)"
+            @set-end="addPoint('end', spotId)"
+            @add-waypoint="addPoint('waypoint', spotId)"
           />
         </div>
       </div>
@@ -24,25 +69,10 @@
           :start-point="startPoint"
           :end-point="endPoint"
           :waypoints="waypoints"
+          :route-details="sortedRouteDetails[selectedDay]"
+          :route-path="computedRoutePath"
         />
       </div>
-    </div>
-    <div id="routeOptions">
-      <div>
-        <strong>Start:</strong>
-        <span v-if="startPoint">{{ getSpotTitle(startPoint) }}</span>
-      </div>
-      <div>
-        <strong>End:</strong>
-        <span v-if="endPoint">{{ getSpotTitle(endPoint) }}</span>
-      </div>
-      <div>
-        <strong>Waypoints:</strong>
-        <span v-for="(waypoint, index) in waypoints" :key="index">
-          {{ getSpotTitle(waypoint) }}<span v-if="index < waypoints.length - 1">, </span>
-        </span>
-      </div>
-      <button @click="searchRoute">Search Route</button>
     </div>
   </div>
 </template>
@@ -69,7 +99,26 @@ export default {
       startPoint: null,
       endPoint: null,
       waypoints: [],
+      travelRoute: {
+        title: "",
+        startAt: "",
+        finishAt: ""
+      },
+      days: [],
+      routeDetails: [],
+      selectedDay: 0,
+      computedRoutePath: [],
     };
+  },
+  computed: {
+    sortedRouteDetails() {
+      return this.routeDetails.map(details => 
+        [...details].sort((a, b) => this.getSortOrder(a.type) - this.getSortOrder(b.type))
+      );
+    },
+    isDateSet() {
+      return this.travelRoute.startAt && this.travelRoute.finishAt;
+    }
   },
   mounted() {
     this.loadUserInfo();
@@ -114,58 +163,177 @@ export default {
           });
       });
     },
-    openMarkerWindow(spotId) {
-      this.openSpotId = spotId;
-    },
-    setStart(spotId) {
-      this.startPoint = spotId;
-    },
-    setEnd(spotId) {
-      this.endPoint = spotId;
-    },
-    addWaypoint(spotId) {
-      if (this.waypoints.length < 13 && !this.waypoints.includes(spotId)) {
-        this.waypoints.push(spotId);
-      }
-    },
     getSpotTitle(spotId) {
       const spot = this.spotDetails.find((spot) => spot.id === spotId);
       return spot ? spot.title : "";
     },
-    searchRoute() {
-      if (!this.startPoint || !this.endPoint) {
-        alert("Please select both start and end points.");
+    updateDays() {
+      const startAt = new Date(this.travelRoute.startAt);
+      const finishAt = new Date(this.travelRoute.finishAt);
+      if (isNaN(startAt) || isNaN(finishAt)) return;
+
+      const days = Math.ceil((finishAt - startAt) / (1000 * 60 * 60 * 24)) + 1;
+
+      this.days = [];
+      for (let i = 1; i <= days; i++) {
+        this.days.push(i);
+        this.routeDetails[i - 1] = this.routeDetails[i - 1] || [];
+      }
+
+      // Reset routePath when the dates change
+      this.computedRoutePath = [];
+    },
+    updateSelectedDay() {
+      if (this.selectedDay >= this.days.length) {
+        this.selectedDay = this.days.length - 1;
+      }
+    },
+    addPoint(type, spotId) {
+      if (!this.travelRoute.startAt || !this.travelRoute.finishAt) {
+        alert("먼저 출발일과 도착일을 설정하세요.");
         return;
       }
-      const start = this.spotDetails.find((spot) => spot.id === this.startPoint);
-      const end = this.spotDetails.find((spot) => spot.id === this.endPoint);
-      const waypoints = this.waypoints.map((id) => {
-        const spot = this.spotDetails.find((spot) => spot.id === id);
-        return `${spot.longitude},${spot.latitude}`;
-      });
 
-      const apiType = waypoints.length + 2 <= 5 ? "" : "-15"; // Determine whether to use API 5 or 15
+      const dayIndex = this.selectedDay;
+      const dayDetails = this.routeDetails[dayIndex];
+      
+      if (type === 'start' || type === 'end') {
+        const existingIndex = dayDetails.findIndex(point => point.type === type);
+        if (existingIndex !== -1) {
+          dayDetails[existingIndex].placeId = spotId;
+        } else {
+          if (type === 'start' && dayDetails.some(point => point.type === 'start')) {
+            dayDetails.splice(dayDetails.findIndex(point => point.type === 'start'), 1);
+          }
+          if (type === 'end' && dayDetails.some(point => point.type === 'end')) {
+            dayDetails.splice(dayDetails.findIndex(point => point.type === 'end'), 1);
+          }
+          dayDetails.push({ type, placeId: spotId, startTime: "", finishTime: "" });
+        }
+      } else if (type === 'waypoint') {
+        const waypoints = dayDetails.filter(point => point.type === 'waypoint');
+        if (waypoints.length >= 5) {
+          alert("경유지는 최대 5개까지 추가할 수 있습니다.");
+          return;
+        }
+        if (waypoints.some(point => point.placeId === spotId)) {
+          alert("경유지가 중복되었습니다.");
+          return;
+        }
+        dayDetails.push({ type, placeId: spotId, startTime: "", finishTime: "" });
+      }
+    },
+    removePoint(dayIndex, pointIndex) {
+      this.routeDetails[dayIndex].splice(pointIndex, 1);
+    },
+    getSortOrder(type) {
+      if (type === 'start') return 0;
+      if (type === 'waypoint') return 1;
+      if (type === 'end') return 2;
+    },
+    saveRoute() {
+      const travelRoute = {
+        userId: this.userId,
+        routeName: this.travelRoute.title,
+        startAt: this.travelRoute.startAt,
+        finishAt: this.travelRoute.finishAt,
+      };
 
-      // 네이버 지도 Directions API를 호출하여 경로를 검색합니다.
       axios
-        .get(`/api/map-direction${apiType}/v1/driving`, {
-          params: {
-            start: `${start.longitude},${start.latitude}`,
-            goal: `${end.longitude},${end.latitude}`,
-            waypoints: waypoints.join("|"),
-          },
-          headers: {
-            "X-NCP-APIGW-API-KEY-ID": import.meta.env.VITE_NAVER_CLIENT_ID,
-            "X-NCP-APIGW-API-KEY": import.meta.env.VITE_NAVER_CLIENT_SECRET,
-          },
-        })
+        .post("http://localhost:8080/travel-route", travelRoute)
         .then((response) => {
-          const route = response.data.route.traoptimal[0].path;
-          this.$refs.routeMap.drawRoute(route);
+          const routeId = response.data.id;
+          this.saveRouteDetails(routeId);
         })
         .catch((error) => {
-          console.error("Error fetching route:", error);
+          console.error("Error saving travel route:", error);
         });
+    },
+    saveRouteDetails(routeId) {
+      const routeDetails = this.routeDetails.flatMap((details, dayIndex) => 
+        details.map((detail, index) => ({
+          routeId,
+          placeId: detail.placeId,
+          day: dayIndex + 1,
+          sequence: this.getSequence(detail.type, index, details),
+          startAt: this.combineDateAndTime(this.travelRoute.startAt, dayIndex, detail.startTime),
+          finishAt: this.combineDateAndTime(this.travelRoute.startAt, dayIndex, detail.finishTime),
+        }))
+      );
+
+      const saveDetail = (detail) => {
+        return axios.post("http://localhost:8080/route-detail", detail);
+      };
+
+      Promise.all(routeDetails.map(saveDetail))
+        .then(() => {
+          alert("Route saved successfully!");
+        })
+        .catch((error) => {
+          console.error("Error saving route details:", error);
+        });
+    },
+    combineDateAndTime(startDate, dayIndex, time) {
+      if (!time) return null;
+      const date = new Date(startDate);
+      date.setDate(date.getDate() + dayIndex);
+      const [hours, minutes] = time.split(':');
+      date.setHours(hours, minutes);
+      return date.toISOString().replace('T', ' ').substr(0, 19); // Format to 'YYYY-MM-DD HH:MM:SS'
+    },
+    getSequence(type, index, details) {
+      if (type === 'start') return 0;
+      if (type === 'end') return -1;
+      if (type === 'waypoint') return details.filter(point => point.type === 'waypoint').indexOf(details[index]) + 1;
+    },
+    openMarkerWindow(spotId) {
+      this.openSpotId = spotId;
+    },
+    showRoute(dayIndex) {
+      const routePoints = this.sortedRouteDetails[dayIndex].map(point => {
+        const spot = this.spotDetails.find(spot => spot.id === point.placeId);
+        return { lat: spot.latitude, lng: spot.longitude, type: point.type };
+      });
+
+      this.drawRoute(routePoints);
+    },
+    drawRoute(route) {
+      if (!route || route.length === 0) {
+        console.error("Route is empty or not provided");
+        return;
+      }
+
+      const start = route.find(point => point.type === 'start');
+      const end = route.find(point => point.type === 'end');
+      const waypoints = route.filter(point => point.type === 'waypoint');
+
+      if (!start || !end) {
+        console.error("Start or end point is missing");
+        return;
+      }
+
+      const waypointPositions = waypoints.map(point => `${point.lng},${point.lat}`).join('|');
+      const startPos = `${start.lng},${start.lat}`;
+      const endPos = `${end.lng},${end.lat}`;
+      const waypointsParam = waypointPositions ? `&waypoints=${waypointPositions}` : '';
+
+      const directionsServiceUrl = `/api/map-direction/v1/driving?start=${startPos}&goal=${endPos}${waypointsParam}`;
+      
+      axios.get(directionsServiceUrl, {
+        headers: {
+          'X-NCP-APIGW-API-KEY-ID': import.meta.env.VITE_NAVER_CLIENT_ID, // 네이버 클라우드 플랫폼의 Client ID
+          'X-NCP-APIGW-API-KEY': import.meta.env.VITE_NAVER_CLIENT_SECRET // 네이버 클라우드 플랫폼의 Client Secret
+        }
+      }).then(response => {
+        if (response.data.route && response.data.route.traoptimal && response.data.route.traoptimal.length > 0) {
+          const path = response.data.route.traoptimal[0].path.map(coord => new naver.maps.LatLng(coord[1], coord[0]));
+          this.computedRoutePath = path; // 수정된 경로를 저장
+        } else {
+          console.error("No traoptimal route found in response", response.data);
+        }
+      }).catch(error => {
+        console.error("Error fetching directions:", error);
+      });
     },
   },
 };
@@ -192,16 +360,19 @@ export default {
   height: 100%;
 }
 
-#routeOptions {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 0;
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-#routeOptions div {
-  margin: 5px 0;
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+  text-align: left;
 }
 
 button {
@@ -214,7 +385,20 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+button:hover:enabled {
   background-color: #0056b3;
+}
+
+input {
+  color: black;
+}
+
+strong {
+  color: black;
 }
 </style>
