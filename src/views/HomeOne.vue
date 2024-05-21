@@ -8,13 +8,13 @@ TestimonialOne, ChooseOne, BlogOne, CTAOne, } from "../components";
 <template>
     <HeaderOne/>
     <HeroOne/>
-    <!-- <AboutOne/>
-    <ServicesOne/> -->
-    <!-- <FeatureOne/>
-    <CounterOne/>
-    <ProjectOne/>
-    <TestimonialOne/>
-    <ChooseOne/> -->
+    <!-- <AboutOne/> -->
+    <!-- <ServicesOne/>  -->
+    <!-- <FeatureOne/>  -->
+    <!-- <CounterOne/> -->
+    <!-- <ProjectOne/> -->
+    <!-- <TestimonialOne/> -->
+    <!-- <ChooseOne/> -->
     <!-- <BlogOne/> -->
     <!-- <CTAOne/> -->
     

@@ -76,7 +76,7 @@ onMounted(() => {
 					<div class="row align-items-center">
 						<div class="col-lg-3">
 							<div class="logo">
-								<router-link class="navbar-brand" to="/"><img src="/assets/img/jeju/logo.png" height="100"
+								<router-link class="navbar-brand" to="/"><img src="/assets/img/logo/logo1.png"
 										alt="" /></router-link>
 							</div>
 						</div>
@@ -148,7 +148,7 @@ onMounted(() => {
 													</li>
 													<li>
 														<router-link
-															:to="{ name: 'service-2' }">여행지 추천</router-link>
+															:to="{ name: 'route' }">여행지 추천</router-link>
 													</li>
 		
 												</ul>

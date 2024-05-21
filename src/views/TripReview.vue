@@ -2,26 +2,24 @@
   <HeaderOne/>
   <BreadCrumb/>
   <div class="team-area gray-bg section-padding">
-    <div class="container">           
-      <input type="text" v-model="searchTerm" placeholder="Search by title..." class="search-input">
+    <div class="container">
+      <div class="search-container">
+        <h2 class="section-title">여행지 검색</h2>
+        <input type="text" v-model="searchTerm" placeholder="여행지를 입력해주세요" class="search-input">
+      </div>
       <div class="row">
-        <div class="col-lg-3 col-md-6" v-for="tm in filteredTeam" :key="tm.id">
+        <div class="col-lg-3 col-md-6 mb-4" v-for="tm in filteredTeam" :key="tm.id">
           <div class="single-team-member">
             <div class="team-member-img">
               <img :src="tm.thumbnailPath" alt="" height="300" width="281">
             </div>
             <div class="team-content">
               <div class="team-title">
-                <router-link :to="`/reviewBoard?id=${tm.id}`">{{ tm.title }}</router-link>
+                <router-link :to="`/reviewBoard?id=${tm.id}`" class="team-link">{{ tm.title }}</router-link>
               </div>
               <div class="team-subtitle">
                 <p>{{ tm.sub_title }}</p>
               </div>
-              <ul class="team-social">
-                <li><a href="#"><i class="fa fa-facebook-f" aria-hidden="true"></i> </a></li>
-                <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i> </a></li>
-                <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i> </a></li>
-              </ul>
             </div>
           </div>
         </div>
@@ -66,6 +64,59 @@ const filteredTeam = computed(() => {
 <style scoped>
 .search-input {
   color: black;
-  /* 필요한 경우 다른 스타일을 추가할 수 있습니다 */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
+
+.search-container {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.section-title {
+  margin-bottom: 15px;
+  font-size: 24px;
+}
+
+.single-team-member {
+  display: flex; /* Flex 컨테이너로 설정 */
+  align-items: center; /* 수직 가운데 정렬 */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+  margin-bottom: 20px;
+}
+
+.single-team-member:hover {
+  transform: translateY(-5px);
+}
+
+.team-content {
+  padding: 15px;
+  text-align: center;
+}
+
+.team-title {
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.team-subtitle {
+  font-size: 16px;
+}
+
+.team-link {
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s ease-in-out;
+}
+
+.team-link:hover {
+  color: #007bff;
+}
+
 </style>

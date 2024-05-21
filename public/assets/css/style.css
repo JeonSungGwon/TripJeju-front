@@ -777,7 +777,8 @@ textarea:focus::-webkit-input-placeholder {
 
 .header-area .logo img {
 	width: 150px;
-	margin-top: -30px;
+	margin-top: -12px;
+	height: 126px;
 }
 
 #header-2 .navigation {
