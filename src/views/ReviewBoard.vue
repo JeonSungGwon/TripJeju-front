@@ -18,6 +18,7 @@
             v-model="newReviewTitle"
             placeholder="제목"
             class="input-title"
+            style="height: 44px;"
           ></textarea>
           <textarea
             v-model="newReviewContent"
@@ -28,7 +29,7 @@
           <ul v-if="selectedFiles.length > 0" class="file-list">
             <li v-for="(file, index) in selectedFiles" :key="index">
               <img v-if="file.type.startsWith('image/')" :src="previewImage(file)" class="file-preview" height="100"/>
-              <p>{{ file.name }}</p>
+      
             </li>
           </ul>
           <button @click="submitReview" class="submit-button">작성 완료</button>
@@ -63,7 +64,7 @@
                 class="image-item"
               >
                 <img
-                  :src="`/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`"
+                  :src="`http://localhost:8080/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`"
                   class="review-image"
                 />
               </li>
@@ -262,7 +263,7 @@ const fetchReviews = () => {
 
 const fetchUserData = async () => {
   try {
-    const response = await axios.get("http://localhost:8080/users/myInfo", {
+    const response = await axios.get("/users/myInfo", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },

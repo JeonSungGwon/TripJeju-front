@@ -19,7 +19,7 @@ export default {
   mounted() {
     this.initializeMap();
     axios
-      .get("http://localhost:8080/users/myInfo", {
+      .get("/users/myInfo", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -48,7 +48,7 @@ export default {
     },
     loadFavorites() {
       axios
-        .get(`http://localhost:8080/favorite/user/${this.id}`)
+        .get(`/favorite/user/${this.id}`)
         .then((response) => {
           this.favoriteSpots = response.data;
           this.updateMarkers();
@@ -143,7 +143,7 @@ export default {
     toggleFavorite(placeId, element) {
       if (!this.id) {
         console.error("User ID is not set.");
-        alert("User information is not loaded yet.");
+        alert("로그인 된 사용자만 가능합니다.");
         return;
       }
 
@@ -163,14 +163,13 @@ export default {
           this.removeFavorite(favorite.id, element);
         }
       } else {
-        if (confirm("Would you like to add this place to your favorites?")) {
           this.addFavorite(placeId, element);
-        }
+        
       }
     },
     addFavorite(placeId, element) {
       axios
-        .post("http://localhost:8080/favorite", {
+        .post("/favorite", {
           placeId: placeId,
           userId: this.id,
         })
@@ -183,7 +182,7 @@ export default {
     },
     removeFavorite(favoriteId, element) {
       axios
-        .delete(`http://localhost:8080/favorite/${favoriteId}`)
+        .delete(`/favorite/${favoriteId}`)
         .then(() => {
           alert("Removed from favorites!");
           element.src = "/assets/img/favoriteOff.png";

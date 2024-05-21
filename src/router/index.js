@@ -15,82 +15,17 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeOne,
-  },    
-  {
-    path: "/index-2",
-    name: "home2",
-    component: HomeTwo,
-  },    
-  {
-    path: "/index-3",
-    name: "home3",
-    component: HomeThree,
-  },    
+  },
   {
     path: "/about",
     name: "about",
     component: About,
-  },    
-  {
-    path: "/choose-us",
-    name: "choose-us",
-    component: ChooseUs,
-  },    
-  {
-    path: "/team",
-    name: "team",
-    component: Team,
   },
   {
     path: "/festival",
     name: "festival",
     component: Festival,
-  },    
-  {
-    path: "/price",
-    name: "price",
-    component: Price,
-  },    
-  {
-    path: "/faq",
-    name: "faq",
-    component: Faq,
-  },    
-  {
-    path: "/service-1",
-    name: "service-1",
-    component: ServiceOne,
-  },    
-  {
-    path: "/service-2",
-    name: "service-2",
-    component: ServiceTwo,
-  },    
-  {
-    path: "/service-details",
-    name: "service-details",
-    component: ServiceDetails,
-  },    
-  {
-    path: "/project",
-    name: "project",
-    component: Project,
-  },    
-  {
-    path: "/project-details",
-    name: "project-details",
-    component: ProjectDetails,
-  },    
-  {
-    path: "/blog",
-    name: "blog",
-    component: Blog,
-  },    
-  {
-    path: "/blog-details",
-    name: "blog-details",
-    component: BlogDetails,
-  },    
+  },
   {
     path: "/contact",
     name: "contact",
@@ -103,7 +38,8 @@ const routes = [
   {
     path: "/tripReview",
     name: "tripReview",
-    component: TripReview
+    component: TripReview,
+    meta: { requiresAuth: true }
   },
   {
     path: "/reviewBoard",
@@ -113,22 +49,26 @@ const routes = [
   {
     path: "/myPageReview",
     name: "myPageReview",
-    component: MyPageReview
+    component: MyPageReview,
+    meta: { requiresAuth: true }
   },
   {
     path: "/myPageBookmark",
     name: "myPageBookmark",
-    component: MypageBookmark
+    component: MypageBookmark,
+    meta: { requiresAuth: true }
   },
   {
     path: "/myPagePlan",
     name: "myPagePlan",
-    component: MypagePlan
+    component: MypagePlan,
+    meta: { requiresAuth: true }
   },
   {
     path: "/myPageVisited",
     name: "myPageVisited",
-    component: MypageVisited
+    component: MypageVisited,
+    meta: { requiresAuth: true }
   },
   {
     path: "/spot",
@@ -139,17 +79,17 @@ const routes = [
     path: "/tour",
     name: "tour",
     component: Tour
-  },  
+  },
   {
     path: "/food",
     name: "food",
     component: Food
-  },  
+  },
   {
     path: "/lodge",
     name: "lodge",
     component: Lodge
-  },  
+  },
   {
     path: "/shop",
     name: "shop",
@@ -172,6 +112,19 @@ const router = createRouter({
       return { top: 0, left: 0 };
     }
   },
+});
+
+// 네비게이션 가드 설정
+router.beforeEach((to, from, next) => {
+  const accessToken = localStorage.getItem('accessToken');
+  
+  if (to.matched.some(record => record.meta.requiresAuth) && !accessToken) {
+    // 액세스 토큰이 없으면 로그인 페이지로 리디렉션
+    next({ path: '/contact' });
+  } else {
+    // 그렇지 않으면 요청한 라우트로 이동
+    next();
+  }
 });
 
 export default router;
