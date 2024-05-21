@@ -27,7 +27,8 @@
           <input type="file" multiple @change="handleFileUpload" />
           <ul v-if="selectedFiles.length > 0" class="file-list">
             <li v-for="(file, index) in selectedFiles" :key="index">
-              {{ file.name }}
+              <img v-if="file.type.startsWith('image/')" :src="previewImage(file)" class="file-preview" height="100"/>
+              <p>{{ file.name }}</p>
             </li>
           </ul>
           <button @click="submitReview" class="submit-button">작성 완료</button>
@@ -62,7 +63,7 @@
                 class="image-item"
               >
                 <img
-                  :src="`http://localhost:8080/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`"
+                  :src="`/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`"
                   class="review-image"
                 />
               </li>
@@ -119,6 +120,10 @@ const handleFileUpload = (event) => {
   selectedFiles.value = Array.from(event.target.files);
 };
 
+const previewImage = (file) => {
+  return URL.createObjectURL(file);
+};
+
 const submitReview = () => {
   const formData = new FormData();
   const data = {
@@ -138,7 +143,7 @@ const submitReview = () => {
   });
 
   axios
-    .post(`http://localhost:8080/post`, formData, {
+    .post(`/post`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -151,7 +156,7 @@ const submitReview = () => {
 
       // 리뷰 제출 후 방문 날짜 정보도 전송
       if (visitDate.value) {
-        axios.post(`http://localhost:8080/visit`, {
+        axios.post(`/visit`, {
           userId: userId.value,
           postId: response.data.id,
           visitDate: visitDate.value,
@@ -169,7 +174,7 @@ const submitReview = () => {
 
 const deleteReview = (reviewId) => {
   axios
-    .delete(`http://localhost:8080/post/${reviewId}`)
+    .delete(`/post/${reviewId}`)
     .then(() => {
       console.log("리뷰가 성공적으로 삭제되었습니다.");
       // Remove the deleted review from the reviews array
@@ -183,7 +188,7 @@ const deleteReview = (reviewId) => {
 const checkLikeStatus = async (userId, postId) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/like/exists?userId=${userId}&postId=${postId}`
+      `/like/exists?userId=${userId}&postId=${postId}`
     );
     const exists = response.data;
     return exists;
@@ -200,7 +205,7 @@ const toggleLike = async (review) => {
     review.heartCnt--;
     review.liked = false;
     axios
-      .delete(`http://localhost:8080/like/delete`, {
+      .delete(`/like/delete`, {
         data: {
           userId: userId.value,
           postId: review.id,
@@ -220,7 +225,7 @@ const toggleLike = async (review) => {
     review.heartCnt++;
     review.liked = true;
     axios
-      .post(`http://localhost:8080/like/add`, {
+      .post(`/like/add`, {
         userId: userId.value,
         postId: review.id,
       })
@@ -238,7 +243,7 @@ const toggleLike = async (review) => {
 
 const fetchReviews = () => {
   axios
-    .get(`http://localhost:8080/post/spot/${id}`)
+    .get(`/post/spot/${id}`)
     .then((response) => {
       console.log(response.data);
       reviews.value = response.data;
@@ -542,6 +547,7 @@ onMounted(() => {
 
 .file-list li {
   margin-bottom: 5px;
+  margin-left: 5px;
 }
 
 .file-list li:last-child {
@@ -549,8 +555,6 @@ onMounted(() => {
 }
 
 .file-list li::before {
-  content: "\2022"; /* 원형 마커 추가 */
-  color: #4caf50; /* 원형 마커 색상 변경 */
   font-weight: bold;
   display: inline-block;
   width: 1em;

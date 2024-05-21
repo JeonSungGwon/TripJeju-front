@@ -69,6 +69,14 @@ Version: 1.0
 /* Common CSS 
 ============== */
 
+
+@font-face {
+    font-family: 'SOYOMapleBoldTTF';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/SOYOMapleBoldTTF.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
 html,
 body {
 	height: 100%;
@@ -78,7 +86,7 @@ body {
 }
 
 body {
-	font-family: 'Poppins', sans-serif;
+	font-family: 'SOYOMapleBoldTTF', sans-serif;
 	font-size: 16px;
 	line-height: 20px;
 	font-weight: 400;
@@ -97,7 +105,7 @@ h4,
 h5,
 h6 {
 	position: relative;
-	font-family: 'Poppins', sans-serif;
+	font-family: 'SOYOMapleBoldTTF', sans-serif;
 	font-weight: 600;
 	margin: 0;
 	color: #002c42;
@@ -118,7 +126,7 @@ h3 {
 a {
 	text-decoration: none;
 	cursor: pointer;
-	font-family: "Poppins", serif;
+	font-family: "SOYOMapleBoldTTF", serif;
 	color: #002c42;
 	font-size: 15px;
 	-webkit-transition: 0.5s;
@@ -126,7 +134,7 @@ a {
 }
 
 p {
-	font-family: 'Poppins', sans-serif;
+	font-family: 'SOYOMapleBoldTTF', sans-serif;
 	font-size: 16px;
 	font-weight: 400;
 	line-height: 25px;
@@ -1217,14 +1225,14 @@ textarea:focus::-webkit-input-placeholder {
 }
 
 .years {
-	font-family: 'Teko', sans-serif;
+	font-family: 'SOYOMapleBoldTTF', sans-serif;
 	font-size: 25px;
 	font-weight: 300;
 	letter-spacing: 1px;
 }
 
 .years span {
-	font-family: 'Teko', sans-serif;
+	font-family: 'SOYOMapleBoldTTF', sans-serif;
 	font-size: 140px;
 	font-weight: 600;
 	line-height: 1;
@@ -2061,7 +2069,7 @@ p.privacy {
 }
 
 .info-content a {
-	font-family: 'Teko', sans-serif;
+	font-family: 'SOYOMapleBoldTTF', sans-serif;
 	font-size: 22px;
 	font-weight: 300;
 	letter-spacing: 3px;
@@ -2090,7 +2098,7 @@ p.privacy {
 
 .info-founder p.highlight {
 	font-size: 65px;
-	font-family: 'Teko', cursive;
+	font-family: 'SOYOMapleBoldTTF', cursive;
 	line-height: 1;
 	color: #fff;
 	margin: 10px 0;
@@ -2181,7 +2189,7 @@ p.privacy {
 	transform: translateY(50%);
 	transition: all .3s ease-in-out;
 	text-transform: uppercase;
-	font-family: 'Teko', sans-serif;
+	font-family: 'SOYOMapleBoldTTF', sans-serif;
 	font-size: 18px;
 	letter-spacing: 2px;
 	color: #F35C27;

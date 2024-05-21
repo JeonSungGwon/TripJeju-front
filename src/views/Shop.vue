@@ -19,16 +19,17 @@
       </div>
     </div>
     <div id="pagination">
-          <button @click="goToPage(0)" :disabled="currentPage === 0">First</button>
-          <button @click="changePageRange(-10)" :disabled="currentPage < 10">-10</button>
-          <span v-for="page in pageRange" :key="page" :class="{ active: page === currentPage + 1 }" @click="goToPage(page - 1)">{{ page }}</span>
-          <button @click="changePageRange(10)" :disabled="currentPage + 10 >= totalPages">+10</button>
-          <button @click="goToPage(totalPages - 1)" :disabled="currentPage + 1 === totalPages">Last</button>
+      <button @click="goToPage(0)" :disabled="currentPage === 0">First</button>
+      <button @click="changePageRange(-10)" :disabled="currentPage < 10">-10</button>
+      <span v-for="page in pageRange" :key="page" :class="{ active: page === currentPage + 1 }" @click="goToPage(page - 1)">{{ page }}</span>
+      <button @click="changePageRange(10)" :disabled="currentPage + 10 >= totalPages">+10</button>
+      <button @click="goToPage(totalPages - 1)" :disabled="currentPage + 1 === totalPages">Last</button>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 import { HeaderOne, BreadCrumb } from "../components";
 import SpotItem from "@/components/SpotItem.vue";
 import SpotMap from "@/components/SpotMap.vue";
@@ -76,21 +77,19 @@ export default {
       this.loadSpots();
     },
     loadSpots() {
-      const params = new URLSearchParams();
-      if (this.tag) params.append('tag', this.tag);
-      if (this.reg1) params.append('reg1', this.reg1);
-      if (this.reg2) params.append('reg2', this.reg2);
-      if (this.title) params.append('title', this.title);
-      params.append('type', this.type);
-      params.append('page', this.currentPage);
-      params.append('size', this.pageSize);
+      const params = {
+        tag: this.tag || undefined,
+        reg1: this.reg1 || undefined,
+        reg2: this.reg2 || undefined,
+        title: this.title || undefined,
+        type: this.type,
+        page: this.currentPage,
+        size: this.pageSize,
+      };
 
-      fetch(`http://localhost:8080/spots/search?${params.toString()}`)
+      axios.get('/spots/search', { params })
         .then(response => {
-          if (!response.ok) throw new Error("Network response was not ok");
-          return response.json();
-        })
-        .then(data => {
+          const data = response.data;
           this.spots = data.spots;
           this.totalPages = Math.ceil(data.total / this.pageSize);
           this.updatePageRange();
