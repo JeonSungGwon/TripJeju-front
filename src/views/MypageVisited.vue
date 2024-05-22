@@ -243,13 +243,15 @@ onMounted(() => {
     padding: 20px;
     display: flex;
     flex-direction: column;
+    text-align: center;
+    font-size: 20px;
     flex-grow: 1;
 }
 
 .card-title {
     font-size: 18px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: -17px;
 }
 
 .card-subtitle {
@@ -257,7 +259,9 @@ onMounted(() => {
     color: #666;
     margin-bottom: 10px;
 }
-
+a{
+    font-size: 18px;
+}
 .social-links {
     list-style-type: none;
     padding: 0;

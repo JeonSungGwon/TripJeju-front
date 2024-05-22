@@ -1,6 +1,6 @@
 <template>
   <div class="spot-item" @click="openMarkerWindow">
-    <div :class="['spot-banner', { 'favorite-banner': isFavorite }]"></div>
+    <div :class="['spot-banner', { 'favorite-banner': isFavorite }]" ref="banner"></div>
     <h5>{{ spot.title }}</h5>
     <img :src="spot.thumbnailPath" :alt="spot.title" class="spot-image">
     <p>{{ spot.introduction }}</p>
@@ -30,10 +30,10 @@ export default {
     async fetchUserInfo() {
       try {
         const response = await axios.get('/users/myInfo', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-        }
-      });
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
+        });
         this.userId = response.data.id;
         this.checkFavoriteStatus();
       } catch (error) {
@@ -46,13 +46,30 @@ export default {
       try {
         const response = await axios.get(`favorite/user/${this.userId}/spot/${this.spot.id}`);
         this.isFavorite = response.data;
+        this.updateBannerColor(); // 배너 색상 업데이트
       } catch (error) {
         console.error('Failed to check favorite status:', error);
+      }
+    },
+    updateBannerColor() {
+      // 배너 엘리먼트에 접근
+      const bannerElement = this.$refs.banner;
+      if (this.isFavorite) {
+        // 즐겨찾기한 경우 빨간색 배너로 변경
+        bannerElement.classList.add('favorite-banner');
+      } else {
+        // 즐겨찾기하지 않은 경우 빨간색 배너 클래스 제거
+        bannerElement.classList.remove('favorite-banner');
       }
     }
   },
   mounted() {
     this.fetchUserInfo();
+  },
+  watch: {
+    isFavorite(newValue) {
+      this.updateBannerColor();
+    }
   }
 }
 </script>

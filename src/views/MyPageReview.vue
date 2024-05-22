@@ -66,6 +66,7 @@ import axios from 'axios';
 import { HeaderOne } from '../components';
 
 const userName = '전성권';
+
 const travelPlans = ref(0);
 const reviewCount = ref(0);
 const savedPlans = ref(0);

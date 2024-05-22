@@ -1,6 +1,5 @@
 <template>
   <div id="mapContainer"></div>
-
 </template>
 
 <script>
@@ -89,20 +88,20 @@ export default {
           });
 
           const contentString = [
-            `<div class="iw_inner">`,
-            `   <h3>${spot.title}</h3>`,
-            `   <p>${spot.address}<br />`,
-            `       ${spot.phoneNumber} | ${spot.tag
-              .split(",")
-              .slice(0, 2)
-              .join(", ")}<br />`,
-            `       <img src="${spot.thumbnailPath}" width="300px" class="thumb" /><br />`,
+            `<div class="iw_inner" style="text-align: center; background-color: #f9f9f9; padding: 20px; border-radius: 10px; border: 2px solid #e0e0e0;">`,
+            `   <h3 style="color: #333;">${spot.title}</h3>`,
+            `   <p style="color: #666; font-size: 14px;">${spot.address}<br />`,
+            `       ${spot.phoneNumber} <br/>`,
+            `       <div style="display: flex; justify-content: center; margin-top: 15px;">`,
+            `           <img src="${spot.thumbnailPath}" class="thumb" style="max-width: 300px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);" />`,
+            `       </div>`,
             `   </p>`,
-            `   <img src="/assets/img/${
-              isFavorite ? "favoriteOn.png" : "favoriteOff.png"
+            `   <img src="/assets/img/${isFavorite ? "favoriteOn.png" : "favoriteOff.png"
             }" class="favorite-button" style="width: 32px; height: 32px; cursor: pointer;" data-spot-id="${spot.id}" />`,
             `</div>`,
           ].join("");
+
+
 
           const infowindow = new naver.maps.InfoWindow({
             content: contentString,
@@ -164,8 +163,8 @@ export default {
           this.removeFavorite(favorite.id, element);
         }
       } else {
-          this.addFavorite(placeId, element);
-        
+        this.addFavorite(placeId, element);
+
       }
     },
     addFavorite(placeId, element) {
@@ -241,6 +240,11 @@ export default {
   height: 600px;
   max-height: 1000px;
 }
+
+#iw_inner {
+  text-align: center;
+}
+
 .favorite-button {
   cursor: pointer;
 }

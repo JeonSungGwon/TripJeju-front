@@ -5,42 +5,43 @@
 
     <div class="review-list">
       <h2>여행 리뷰</h2>
-      <button @click="openModal(null)" class="write-review-button">
-        리뷰 작성하기
-      </button>
-      <!-- 모달 -->
-<div class="modal" v-if="isModalOpen">
-  <div class="modal-content">
-    <span class="close" @click="closeModal">&times;</span>
-    <h3 v-if="!isEditMode">리뷰 작성</h3>
-    <h3 v-else>리뷰 수정</h3>
-    <Datepicker v-model="visitDate" :timepicker="false" placeholder="방문 날짜를 선택하세요" v-if="!isEditMode" />
-    <textarea
-      v-model="newReviewTitle"
-      :placeholder="isEditMode ? '제목을 수정하세요' : '제목'"
-      class="input-title"
-      style="height: 44px;"
-    ></textarea>
-    <textarea
-      v-model="newReviewContent"
-      :placeholder="isEditMode ? '내용을 수정하세요' : '내용'"
-      class="input-content"
-    ></textarea>
-    <ul v-if="selectedFiles.length > 0" class="file-list">
-  <li v-for="(file, index) in selectedFiles" :key="index">
-    <img v-if="file.type === 'image'" :src="file.preview" class="file-preview" height="100"/>
-  </li>
-</ul>
-
-    <input type="file" multiple @change="handleFileUpload" v-if="!isEditMode" />
-    <ul v-if="selectedFiles.length > 0" class="file-list">
-      <li v-for="(file, index) in selectedFiles" :key="index">
-        <img v-if="file.type.startsWith('image/')" :src="previewImage(file)" class="file-preview" height="100"/>
-      </li>
-    </ul>
-    <button @click="isEditMode ? updateReview() : submitReview()" class="submit-button">{{ isEditMode ? '수정 완료' : '작성 완료' }}</button>
+  <div class="review-list-header">
+    <button @click="openModal(null)" class="write-review-button">
+      리뷰 작성하기
+    </button>
+    <div class="sort-buttons">
+      <button @click="sortByRecent" class="sort-button">최신순</button>
+      <button @click="sortByLikes" class="sort-button">좋아요순</button>
+    </div>
   </div>
-</div>
+
+      <!-- 모달 -->
+      <div class="modal" v-if="isModalOpen">
+        <div class="modal-content">
+          <span class="close" @click="closeModal">&times;</span>
+          <h3 v-if="!isEditMode">리뷰 작성</h3>
+          <h3 v-else>리뷰 수정</h3>
+          <Datepicker v-model="visitDate" :timepicker="false" placeholder="방문 날짜를 선택하세요" v-if="!isEditMode" />
+          <textarea v-model="newReviewTitle" :placeholder="isEditMode ? '제목을 수정하세요' : '제목'" class="input-title"
+            style="height: 44px;"></textarea>
+          <textarea v-model="newReviewContent" :placeholder="isEditMode ? '내용을 수정하세요' : '내용'"
+            class="input-content"></textarea>
+          <ul v-if="selectedFiles.length > 0" class="file-list">
+            <li v-for="(file, index) in selectedFiles" :key="index">
+              <img v-if="file.type === 'image'" :src="file.preview" class="file-preview" height="100" />
+            </li>
+          </ul>
+
+          <input type="file" multiple @change="handleFileUpload" v-if="!isEditMode" />
+          <ul v-if="selectedFiles.length > 0" class="file-list">
+            <li v-for="(file, index) in selectedFiles" :key="index">
+              <img v-if="file.type.startsWith('image/')" :src="previewImage(file)" class="file-preview" height="100" />
+            </li>
+          </ul>
+          <button @click="isEditMode ? updateReview() : submitReview()" class="submit-button">{{ isEditMode ? '수정 완료' :
+            '작성 완료' }}</button>
+        </div>
+      </div>
 
       <!-- 기존 리뷰 목록 -->
       <div v-if="reviews.length > 0" class="reviews-container">
@@ -61,36 +62,20 @@
             </div>
 
             <p class="review-content">{{ review.content }}</p>
-            <ul
-              v-if="review.fileInfos && review.fileInfos.length > 0"
-              class="image-list"
-            >
-              <li
-                v-for="(file, index) in review.fileInfos"
-                :key="index"
-                class="image-item"
-              >
+            <ul v-if="review.fileInfos && review.fileInfos.length > 0" class="image-list">
+              <li v-for="(file, index) in review.fileInfos" :key="index" class="image-item">
                 <img
                   :src="`http://localhost:8080/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`"
-                  class="review-image"
-                />
+                  class="review-image" />
               </li>
             </ul>
             <div>
               <!-- 수정 버튼 -->
-              <button
-                v-if="review.userId === userId"
-                @click="openModal(review)"
-                class="edit-button"
-              >
+              <button v-if="review.userId === userId" @click="openModal(review)" class="edit-button">
                 수정
               </button>
               <!-- 삭제 버튼을 특정 조건에 따라 렌더링 -->
-              <button
-                v-if="review.userId === userId"
-                @click="deleteReview(review.id)"
-                class="delete-button"
-              >
+              <button v-if="review.userId === userId" @click="deleteReview(review.id)" class="delete-button">
                 삭제
               </button>
             </div>
@@ -128,21 +113,21 @@ const id = currentUrl.searchParams.get("id");
 
 const openModal = (review = null) => {
   if (review) {
-  visitDate.value = 
-  isEditMode.value = true;
-  editingReviewId = review.id;
-  newReviewTitle.value = review.title;
-  newReviewContent.value = review.content;
+    visitDate.value =
+      isEditMode.value = true;
+    editingReviewId = review.id;
+    newReviewTitle.value = review.title;
+    newReviewContent.value = review.content;
 
-  // 이미지 파일 정보 가져오기
-  selectedFiles.value = review.fileInfos.map(fileInfo => {
-    return {
-      type: 'image', // 이미지 타입 여부를 나타내는 플래그 추가
-      preview: `http://localhost:8080/file/download/${fileInfo.saveFolder}/${fileInfo.originalFile}/${fileInfo.saveFile}`
-    };
-  });
-}
- else {
+    // 이미지 파일 정보 가져오기
+    selectedFiles.value = review.fileInfos.map(fileInfo => {
+      return {
+        type: 'image', // 이미지 타입 여부를 나타내는 플래그 추가
+        preview: `http://localhost:8080/file/download/${fileInfo.saveFolder}/${fileInfo.originalFile}/${fileInfo.saveFile}`
+      };
+    });
+  }
+  else {
     isEditMode.value = false;
     editingReviewId = null;
     newReviewTitle.value = "";
@@ -162,6 +147,14 @@ const handleFileUpload = (event) => {
 
 const previewImage = (file) => {
   return URL.createObjectURL(file);
+};
+
+const sortByRecent = () => {
+  reviews.value.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+};
+
+const sortByLikes = () => {
+  reviews.value.sort((a, b) => b.heartCnt - a.heartCnt);
 };
 
 const submitReview = () => {
@@ -192,7 +185,7 @@ const submitReview = () => {
     })
     .then((response) => {
       console.log(response.data)
-      reviews.value.push(response.data);
+      reviews.value.unshift(response.data);
       closeModal();
       selectedFiles.value = [];
       if (formattedDate) {
@@ -314,22 +307,24 @@ const toggleLike = async (review) => {
   }
 };
 
-const fetchReviews = () => {
-  axios
-    .get(`/post/spot/${id}`)
-    .then((response) => {
-      reviews.value = response.data;
-      reviews.value.forEach(async (review) => {
-        review.liked = await checkLikeStatus(userId.value, review.id);
-      });
-    })
-    .catch((error) => {
-      console.error(
-        "리뷰 목록을 가져오는 중 오류가 발생했습니다.",
-        error.response.data
-      );
-    });
+const fetchReviews = async () => {
+  try {
+    const response = await axios.get(`/post/spot/${id}`);
+    const fetchedReviews = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    // 각 리뷰에 대해 좋아요 상태를 확인하고 설정
+    for (const review of fetchedReviews) {
+      review.liked = await checkLikeStatus(userId.value, review.id);
+    }
+
+    // 설정된 리뷰 목록을 reviews에 할당
+    reviews.value = fetchedReviews;
+  } catch (error) {
+    console.error("리뷰 목록을 가져오는 중 오류가 발생했습니다.", error.response.data);
+  }
 };
+
+
 
 const fetchUserData = async () => {
   try {
@@ -416,6 +411,7 @@ onMounted(() => {
 .submit-button:hover {
   background-color: #45a049;
 }
+
 /* 리뷰 목록 스타일 */
 .review-list {
   margin: 20px;
@@ -520,7 +516,8 @@ onMounted(() => {
 }
 
 .heart-count {
-  font-size: 20px; /* 크기 조정 */
+  font-size: 20px;
+  /* 크기 조정 */
   /* margin-right: 10px;  */
 }
 
@@ -535,13 +532,16 @@ onMounted(() => {
 
 .like-button .fas.fa-heart {
   color: red;
-  font-size: 24px; /* 크기 조정 */
+  font-size: 24px;
+  /* 크기 조정 */
 }
 
 .like-button .far.fa-heart {
   color: grey;
-  font-size: 24px; /* 크기 조정 */
+  font-size: 24px;
+  /* 크기 조정 */
 }
+
 .edit-button,
 .delete-button {
   font-size: 14px;
@@ -575,7 +575,8 @@ onMounted(() => {
 }
 
 .delete-button {
-  background-color: #ff6347; /* 삭제 버튼 색상 변경 */
+  background-color: #ff6347;
+  /* 삭제 버튼 색상 변경 */
   color: white;
   padding: 8px 16px;
   border: none;
@@ -585,7 +586,8 @@ onMounted(() => {
 }
 
 .delete-button:hover {
-  background-color: #d63b20; /* 호버 시 색상 변경 */
+  background-color: #d63b20;
+  /* 호버 시 색상 변경 */
 }
 
 .delete-button:focus {
@@ -641,7 +643,8 @@ onMounted(() => {
 
 .input-title:focus,
 .input-content:focus {
-  border-color: #4caf50; /* 입력 필드 포커스 시 색상 변경 */
+  border-color: #4caf50;
+  /* 입력 필드 포커스 시 색상 변경 */
 }
 
 .file-list {
@@ -662,6 +665,16 @@ onMounted(() => {
   display: inline-block;
   width: 1em;
   margin-left: -1em;
+}
+
+.sort-buttons {
+  margin-bottom: 10px;
+  /* 버튼과 아래 내용 사이 여백 */
+}
+
+.sort-button {
+  margin-right: 5px;
+  /* 각 버튼 사이 간격 */
 }
 
 .submit-button {
@@ -696,10 +709,15 @@ onMounted(() => {
   color: #666;
 }
 
+.review-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 버튼들을 수직으로 정렬하기 위해 추가 */
+}
+
 @media screen and (max-width: 768px) {
   .modal-content {
     width: 90%;
   }
 }
-
 </style>
