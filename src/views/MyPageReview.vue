@@ -80,7 +80,7 @@ const totalListItemCount = ref(0);
 
 const fetchUserData = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/users/myInfo', {
+    const response = await axios.get('/users/myInfo', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`
       }
@@ -98,7 +98,7 @@ const fetchUserData = async () => {
 
 const fetchTotalItemCount = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/visit/user/count/1");
+      const response = await axios.get("/visit/user/count/1");
       totalListItemCount.value = response.data;
     } catch (error) {
       console.error("Failed to fetch total item count:", error);
@@ -107,7 +107,7 @@ const fetchTotalItemCount = async () => {
 
 const fetchReviews = async () => {
   try {
-      const response = await axios.get(`http://localhost:8080/post/user/${userId.value}`);
+      const response = await axios.get(`/post/user/${userId.value}`);
       reviews.value = response.data;
       reviewCount.value =  response.data.length;
   } catch (error) {
@@ -124,7 +124,7 @@ const showMoreReviews = () => {
 
 const deleteReview = async (reviewId) => {
   try {
-    await axios.delete(`http://localhost:8080/post/${reviewId}`);
+    await axios.delete(`/post/${reviewId}`);
     reviews.value = reviews.value.filter(review => review.id !== reviewId);
     reviewCount.value -= 1;
   } catch (error) {

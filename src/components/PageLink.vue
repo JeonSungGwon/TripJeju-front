@@ -67,7 +67,7 @@ const movePage = (param) => {
 
 const initComponent = () => {
   axios
-    .get('http://localhost:8080/spots/count', {
+    .get('/spots/count', {
       params: { search: props.searchTerm }
     })
     .then(({ data }) => {

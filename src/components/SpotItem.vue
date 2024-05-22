@@ -1,6 +1,6 @@
 <template>
   <div class="spot-item" @click="openMarkerWindow">
-    <div class="spot-banner"></div>
+    <div :class="['spot-banner', { 'favorite-banner': isFavorite }]"></div>
     <h5>{{ spot.title }}</h5>
     <img :src="spot.thumbnailPath" :alt="spot.title" class="spot-image">
     <p>{{ spot.introduction }}</p>
@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   props: {
     spot: {
@@ -15,10 +17,42 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      userId: null,
+      isFavorite: false
+    };
+  },
   methods: {
     openMarkerWindow() {
       this.$emit('open-marker-window', this.spot.id);
+    },
+    async fetchUserInfo() {
+      try {
+        const response = await axios.get('/users/myInfo', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
+      });
+        this.userId = response.data.id;
+        this.checkFavoriteStatus();
+      } catch (error) {
+        console.error('Failed to fetch user info:', error);
+      }
+    },
+    async checkFavoriteStatus() {
+      if (!this.userId || !this.spot.id) return;
+      
+      try {
+        const response = await axios.get(`favorite/user/${this.userId}/spot/${this.spot.id}`);
+        this.isFavorite = response.data;
+      } catch (error) {
+        console.error('Failed to check favorite status:', error);
+      }
     }
+  },
+  mounted() {
+    this.fetchUserInfo();
   }
 }
 </script>
@@ -33,7 +67,7 @@ export default {
   cursor: pointer;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #e0e0e0; /* 카드의 테두리를 추가하여 구분 */
+  border: 1px solid #e0e0e0;
   position: relative;
 }
 
@@ -48,9 +82,13 @@ export default {
   left: 0;
   right: 0;
   height: 10px;
-  background-color: orange; /* 카드 상단에 배너 색상 추가 */
+  background-color: orange;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+}
+
+.favorite-banner {
+  background-color: red !important;
 }
 
 .spot-item h5 {

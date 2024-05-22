@@ -45,7 +45,7 @@ onMounted(() => {
 	// Axios 요청
 	// Existing code for menu toggler and Axios request
 	axios
-		.get("http://localhost:8080/users/myInfo", {
+		.get("/users/myInfo", {
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
 			},

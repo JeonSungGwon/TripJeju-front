@@ -14,6 +14,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.6",
     "@vuepic/vue-datepicker": "^8.6.0",
     "axios": "^1.6.8",
+    "dayjs": "^1.11.11",
     "flatpickr": "^4.6.13",
     "vue": "^3.4.21",
     "vue-flatpickr-component": "^11.0.5",

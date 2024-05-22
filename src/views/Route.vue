@@ -126,7 +126,7 @@ export default {
   methods: {
     loadUserInfo() {
       axios
-        .get("http://localhost:8080/users/myInfo", {
+        .get("/users/myInfo", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
@@ -141,7 +141,7 @@ export default {
     },
     loadFavoriteSpots() {
       axios
-        .get(`http://localhost:8080/favorite/user/${this.userId}`)
+        .get(`/favorite/user/${this.userId}`)
         .then((response) => {
           this.favoriteSpotIds = response.data.map(fav => fav.placeId);
           this.loadSpotDetails();
@@ -154,7 +154,7 @@ export default {
       this.spotDetails = [];
       this.favoriteSpotIds.forEach(spotId => {
         axios
-          .get(`http://localhost:8080/spots/id/${spotId}`)
+          .get(`/spots/id/${spotId}`)
           .then(response => {
             this.spotDetails.push(response.data);
           })
@@ -240,7 +240,7 @@ export default {
       };
 
       axios
-        .post("http://localhost:8080/travel-route", travelRoute)
+        .post("/travel-route", travelRoute)
         .then((response) => {
           const routeId = response.data.id;
           this.saveRouteDetails(routeId);
@@ -262,7 +262,7 @@ export default {
       );
 
       const saveDetail = (detail) => {
-        return axios.post("http://localhost:8080/route-detail", detail);
+        return axios.post("/route-detail", detail);
       };
 
       Promise.all(routeDetails.map(saveDetail))

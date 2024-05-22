@@ -1051,11 +1051,17 @@ textarea:focus::-webkit-input-placeholder {
 ==================*/
 
 .single-slide-item {
-	background-image: url(../img/jeju/jeju-island-6889156_1280.jpg);
+	background-image: url(../img/jeju/ocean-7281047_1920.jpg);
 }
 
 .hero-area-bg-2 {
-	background-image: url(../img/jeju/ocean-7281047_1920.jpg);
+	background-image: url(../img/jeju/jeju-island-6889156_1280.jpg);
+}
+.hero-area-bg-3 {
+	background-image: url(../img/jeju/room.jpg);
+}
+.hero-area-bg-4 {
+	background-image: url(../img/jeju/lighthouse-7261015_1920.jpg);
 }
 
 #home2 .single-slide-item {

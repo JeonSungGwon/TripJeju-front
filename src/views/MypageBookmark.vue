@@ -41,7 +41,7 @@
             <p>{{ review.content }}</p>
             <ul v-if="review.fileInfos && review.fileInfos.length > 0" class="image-list">
                 <li v-for="(file, index) in review.fileInfos" :key="index" class="image-item">
-                  <img :src="`http://localhost:8080/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`" class="review-image" />
+                  <img :src="`/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`" class="review-image" />
                 </li>
             </ul>
           </li>
@@ -76,7 +76,7 @@
   
   const fetchUserData = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/users/myInfo', {
+      const response = await axios.get('/users/myInfo', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
@@ -95,7 +95,7 @@
   
   const fetchReviews = async () => {
     try {
-        const response = await axios.get(`http://localhost:8080/post/user/${userId.value}`);
+        const response = await axios.get(`/post/user/${userId.value}`);
         reviews.value = response.data;
         reviewCount.value =  response.data.length;
     } catch (error) {

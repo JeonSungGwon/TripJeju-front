@@ -53,6 +53,18 @@ onMounted(() => {
 		$(".single-slide-item p").addClass("animated fadeInDown").css("opacity", "1");
 		$(".single-slide-item a.main-btn").addClass("animated fadeInDown").css("opacity", "1");
 	});
+	$(".homepage-slides").on("translated.owl.carousel", function () {
+		$(".single-slide-item h1").addClass("animated fadeInUp").css("opacity", "1");
+		$(".single-slide-item h6").addClass("animated fadeInDown").css("opacity", "1");
+		$(".single-slide-item p").addClass("animated fadeInDown").css("opacity", "1");
+		$(".single-slide-item a.main-btn").addClass("animated fadeInDown").css("opacity", "1");
+	});
+	$(".homepage-slides").on("translated.owl.carousel", function () {
+		$(".single-slide-item h1").addClass("animated fadeInUp").css("opacity", "1");
+		$(".single-slide-item h6").addClass("animated fadeInDown").css("opacity", "1");
+		$(".single-slide-item p").addClass("animated fadeInDown").css("opacity", "1");
+		$(".single-slide-item a.main-btn").addClass("animated fadeInDown").css("opacity", "1");
+	});
   
 });
 
@@ -68,10 +80,10 @@ onMounted(() => {
  						<div class="col-lg-12 wow fadeInUp animated" data-wow-delay=".2s">
  							<div class="section-title">
 								<h6 class="text-white">Trip Jeju</h6>
- 								<h1>제주도<br> 놀러옵서예</h1>
- 								<p> 정말 재밌다 <br>너무 잘만들었다</p>
+ 								<h1>제주도 관광지<br> 어디로 가야할까?</h1>
+ 								
  							</div>
- 							<router-link :to="{name:'about'}" class="main-btn">Learn More</router-link>
+ 							<router-link :to="{name:'tour'}" class="main-btn">Learn More</router-link>
  						</div>
  					</div>
  				</div>
@@ -86,10 +98,46 @@ onMounted(() => {
  						<div class="col-lg-12 wow fadeInUp animated" data-wow-delay=".2s">
  							<div class="section-title">
 								<h6 class="text-white">Trip Jeju</h6>
- 								<h1>제주도 바다<br> 예쁘다.</h1>
+ 								<h1>맛있는 음식<br> 찾으러 가기</h1>
  			
  							</div>
- 							<router-link :to="{name:'about'}" class="main-btn">Learn More</router-link>
+ 							<router-link :to="{name:'food'}" class="main-btn">Learn More</router-link>
+ 						</div>
+ 					</div>
+ 				</div>
+ 			</div>
+ 		</div>
+
+		 <div class="single-slide-item hero-area-bg-3">
+ 			<div class="overlay"></div>
+ 			<div class="hero-area-content">
+ 				<div class="container">
+ 					<div class="row justify-content-center">
+ 						<div class="col-lg-12 wow fadeInUp animated" data-wow-delay=".2s">
+ 							<div class="section-title">
+								<h6 class="text-white">Trip Jeju</h6>
+ 								<h1>제주도 예쁜숙소<br> 가고싶을 땐?</h1>
+ 			
+ 							</div>
+ 							<router-link :to="{name:'lodge'}" class="main-btn">Learn More</router-link>
+ 						</div>
+ 					</div>
+ 				</div>
+ 			</div>
+ 		</div>
+
+		 <div class="single-slide-item hero-area-bg-4">
+ 			<div class="overlay"></div>
+ 			<div class="hero-area-content">
+ 				<div class="container">
+ 					<div class="row justify-content-center">
+ 						<div class="col-lg-12 wow fadeInUp animated" data-wow-delay=".2s">
+ 							<div class="section-title">
+								<h6 class="text-white">Trip Jeju</h6>
+ 								<h1>가족들 기념품<br> 구매하셨나요?</h1>
+ 			
+ 							</div>
+ 							<router-link :to="{name:'shop'}" class="main-btn">Learn More</router-link>
  						</div>
  					</div>
  				</div>

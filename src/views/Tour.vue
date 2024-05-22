@@ -91,7 +91,7 @@ export default {
       params.append('page', this.currentPage);
       params.append('size', this.pageSize);
 
-      fetch(`http://localhost:8080/spots/search?${params.toString()}`)
+      fetch(`/spots/search?${params.toString()}`)
         .then((response) => {
           if (!response.ok) throw new Error("Network response was not ok");
           return response.json();

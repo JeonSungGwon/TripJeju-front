@@ -47,7 +47,7 @@ watch(() => route.query, initComponent);
 watch(searchTerm, initComponent);
 
 async function initComponent() {
-  const { data: fetchedTeam } = await axios.get(`http://localhost:8080/spots`,{
+  const { data: fetchedTeam } = await axios.get(`/spots`,{
     params: { size: pageLimit, page: `${route.query.no - pageLimit} `, search: searchTerm.value }
   });
   team.value = fetchedTeam;

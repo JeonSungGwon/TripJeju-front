@@ -1,9 +1,9 @@
 <template>
-  <HeaderOne/>
+  <HeaderOne />
   <div class="container">
     <div class="profile-section">
       <div class="profile">
-        <img :src="profileImageUrl" alt="Profile Image">
+        <img :src="profileImageUrl" alt="Profile Image" />
         <div>
           <h2>{{ nickname }}님의 제주여행</h2>
         </div>
@@ -40,9 +40,10 @@
           <h4>{{ review.title }}</h4>
           <p>{{ review.content }}</p>
           <ul v-if="review.fileInfos && review.fileInfos.length > 0" class="image-list">
-              <li v-for="(file, index) in review.fileInfos" :key="index" class="image-item">
-                <img :src="`http://localhost:8080/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`" class="review-image" />
-              </li>
+            <li v-for="(file, index) in review.fileInfos" :key="index" class="image-item">
+              <img :src="`/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`"
+                class="review-image" />
+            </li>
           </ul>
         </li>
       </ul>
@@ -56,58 +57,62 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import axios from 'axios';
-import { HeaderOne } from '../components';
+import { ref, computed, onMounted } from "vue";
+import axios from "axios";
+import { HeaderOne } from "../components";
 
-const userName = '전성권';
+const userName = "전성권";
 const travelPlans = ref(0);
 const reviewCount = ref(0);
 const savedPlans = ref(0);
 const visitedPlaces = ref(0);
 const savedLocations = ref(0);
 const reviews = ref([]);
-const reviewsToShow = ref(5);  // 초기에 보여줄 리뷰 개수
-const profileImageUrl = ref('');
-const nickname = ref(''); 
+const reviewsToShow = ref(5); // 초기에 보여줄 리뷰 개수
+const profileImageUrl = ref("");
+const nickname = ref("");
 const userId = ref(0);
-
-
 
 const fetchUserData = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/users/myInfo', {
+    const response = await axios.get("/users/myInfo", {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-      }
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
     });
-    console.log(response)
+    console.log(response);
     const userData = response.data;
     profileImageUrl.value = userData.imageUrl;
     nickname.value = userData.nickname;
     userId.value = userData.id;
-    
+
     fetchReviews();
   } catch (error) {
-    console.error('Failed to fetch user data:', error);
+    console.error("Failed to fetch user data:", error);
   }
 };
 
 const fetchReviews = async () => {
   try {
-      const response = await axios.get(`http://localhost:8080/post/user/${userId.value}`);
-      reviews.value = response.data;
-      reviewCount.value =  response.data.length;
+    const response = await axios.get(
+      `/post/user/${userId.value}`
+    );
+    reviews.value = response.data;
+    reviewCount.value = response.data.length;
   } catch (error) {
-      console.error('Failed to fetch reviews:', error);
+    console.error("Failed to fetch reviews:", error);
   }
 };
 
-const displayedReviews = computed(() => reviews.value.slice(0, reviewsToShow.value));
-const showMoreButton = computed(() => reviews.value.length > reviewsToShow.value);
+const displayedReviews = computed(() =>
+  reviews.value.slice(0, reviewsToShow.value)
+);
+const showMoreButton = computed(
+  () => reviews.value.length > reviewsToShow.value
+);
 
 const showMoreReviews = () => {
-  reviewsToShow.value += 5;  // 더보기 버튼 클릭 시 5개 더 보여주기
+  reviewsToShow.value += 5; // 더보기 버튼 클릭 시 5개 더 보여주기
 };
 
 onMounted(() => {
@@ -126,12 +131,16 @@ onMounted(() => {
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
 }
 
-.profile-section, .stats-section, .review-section, .new-section {
+.profile-section,
+.stats-section,
+.review-section,
+.new-section {
   width: 100%;
   margin-bottom: 30px;
 }
 
-.profile, .stats {
+.profile,
+.stats {
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -197,8 +206,10 @@ onMounted(() => {
 }
 
 .image-item {
-  width: 100px; /* 아이템의 너비를 조절하여 이미지 크기 조절 */
-  height: 100px; /* 아이템의 높이를 조절하여 이미지 크기 조절 */
+  width: 100px;
+  /* 아이템의 너비를 조절하여 이미지 크기 조절 */
+  height: 100px;
+  /* 아이템의 높이를 조절하여 이미지 크기 조절 */
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);

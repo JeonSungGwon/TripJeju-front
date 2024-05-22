@@ -43,7 +43,7 @@ onMounted(async () => {
 });
 
 async function fetchData() {
-  const { data: fetchedTeam } = await axios.get(`http://localhost:8080/spots/month/c5/${selectedMonth.value}`);
+  const { data: fetchedTeam } = await axios.get(`/spots/month/c5/${selectedMonth.value}`);
   team.value = fetchedTeam;
 }
 
