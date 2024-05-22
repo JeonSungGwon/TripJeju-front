@@ -320,6 +320,7 @@ export default {
       const directionsServiceUrl = `/api/map-direction/v1/driving?start=${startPos}&goal=${endPos}${waypointsParam}`;
       
       axios.get(directionsServiceUrl, {
+        baseURL: '',
         headers: {
           'X-NCP-APIGW-API-KEY-ID': import.meta.env.VITE_NAVER_CLIENT_ID, // 네이버 클라우드 플랫폼의 Client ID
           'X-NCP-APIGW-API-KEY': import.meta.env.VITE_NAVER_CLIENT_SECRET // 네이버 클라우드 플랫폼의 Client Secret
