@@ -6,12 +6,7 @@
     <div id="container">
       <div id="mainContainer">
         <div class="content">
-          <SpotItem
-            v-for="spot in spots"
-            :key="spot.id"
-            :spot="spot"
-            @open-marker-window="openMarkerWindow"
-          />
+          <SpotItem v-for="spot in spots" :key="spot.id" :spot="spot" @open-marker-window="openMarkerWindow" />
         </div>
       </div>
       <div id="mapContainer">
@@ -21,13 +16,8 @@
     <div id="pagination">
       <button @click="goToPage(0)" :disabled="currentPage === 0">First</button>
       <button @click="changePageRange(-10)" :disabled="currentPage < 10">-10</button>
-      <span
-        v-for="page in pageRange"
-        :key="page"
-        :class="{ active: page === currentPage + 1 }"
-        @click="goToPage(page - 1)"
-        >{{ page }}</span
-      >
+      <span v-for="page in pageRange" :key="page" :class="{ active: page === currentPage + 1 }"
+        @click="goToPage(page - 1)">{{ page }}</span>
       <button @click="changePageRange(10)" :disabled="currentPage + 10 >= totalPages">+10</button>
       <button @click="goToPage(totalPages - 1)" :disabled="currentPage + 1 === totalPages">Last</button>
     </div>
@@ -39,6 +29,7 @@ import { HeaderOne, BreadCrumb } from "../components";
 import SpotItem from "@/components/SpotItem.vue";
 import SpotMap from "@/components/SpotMap.vue";
 import SpotFilter from "@/components/SpotFilter.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -60,7 +51,7 @@ export default {
       title: '',
       type: 'c1',
       openSpotId: null, // 현재 열려있는 스팟의 ID
-      pageRange: [],
+      pageRange: []
     };
   },
   mounted() {
@@ -69,7 +60,7 @@ export default {
   watch: {
     currentPage(newPage) {
       this.updatePageRange();
-    },
+    }
   },
   methods: {
     updateFilter({ tag, reg1, reg2, title }) {
@@ -91,17 +82,14 @@ export default {
       params.append('page', this.currentPage);
       params.append('size', this.pageSize);
 
-      fetch(`/spots/search?${params.toString()}`)
-        .then((response) => {
-          if (!response.ok) throw new Error("Network response was not ok");
-          return response.json();
-        })
-        .then((data) => {
+      axios.get(`/spots/search`, { params })
+        .then(response => {
+          const data = response.data;
           this.spots = data.spots;
           this.totalPages = Math.ceil(data.total / this.pageSize);
           this.updatePageRange();
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Error fetching spots:", error);
         });
     },
@@ -137,7 +125,7 @@ export default {
     },
     openMarkerWindow(spotId) {
       this.openSpotId = spotId;
-    },
+    }
   },
 };
 </script>
@@ -148,9 +136,6 @@ export default {
   height: 100%;
   width: 80%;
   margin: 0 auto;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 #mainContainer {
@@ -159,54 +144,46 @@ export default {
   flex-direction: column;
   height: 600px;
   overflow-y: auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-right: 1px solid #e0e0e0;
 }
 
 #mapContainer {
   flex: 3;
   height: 100%;
-  padding: 20px;
-  background-color: #ffffff;
 }
 
 #pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0;
+  margin: 10px 0;
 }
 
-#pagination button,
-#pagination span {
+#pagination button {
   margin: 0 5px;
-  padding: 8px 12px;
+  padding: 5px 10px;
   background-color: #f0f0f0;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-#pagination button:disabled,
-#pagination span.active {
-  background-color: #ff5722;
-  color: #ffffff;
-  cursor: default;
 }
 
 #pagination button:disabled {
-  opacity: 0.6;
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 #pagination span {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 2px;
   cursor: pointer;
+  background-color: #f0f0f0;
+  border-radius: 4px;
 }
 
-#pagination span:hover {
-  background-color: #ff8a50;
-  color: #ffffff;
+#pagination span.active {
+  background-color: #ff5722;
+  color: white;
 }
 
 #mainContainer .content {
