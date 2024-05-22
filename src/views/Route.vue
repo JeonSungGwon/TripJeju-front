@@ -66,6 +66,7 @@
           </div>
           <div v-for="(day, index) in days" :key="index">
             <h3>{{ index + 1 }}일차</h3>
+            <button @click="showRoute(index)">경로 보기</button>
             <table>
               <thead>
                 <tr>
@@ -91,7 +92,6 @@
                 </tr>
               </tbody>
             </table>
-            <button @click="showRoute(index)">경로 보기</button>
           </div>
           <button @click="saveRoute" :disabled="!isDateSet">일정 만들기</button>
         </div>
@@ -460,6 +460,10 @@ export default {
 table {
   width: 100%;
   border-collapse: collapse;
+}
+
+select {
+  color: black;
 }
 
 th,
