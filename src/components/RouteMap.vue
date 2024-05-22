@@ -13,6 +13,8 @@ export default {
       markers: [],
       infowindows: [],
       routePolyline: null,
+      trafficLayer: null,
+      trafficLayerEnabled: false,
       markerIcons: {
         start: "/assets/img/icon_navi89_directions.png",
         end: "/assets/img/icon_navi88_directions.png",
@@ -34,7 +36,9 @@ export default {
         zoom: 10,
       };
       this.map = new naver.maps.Map(this.$el, mapOptions);
+      this.trafficLayer = new naver.maps.TrafficLayer();
       this.updateMarkers();
+      this.drawRoute(this.routePath);
     },
     updateMarkers() {
       this.clearMarkers();
@@ -132,6 +136,14 @@ export default {
         this.map.setCenter(path[0]);
       }
     },
+    toggleTrafficLayer() {
+      this.trafficLayerEnabled = !this.trafficLayerEnabled;
+      if (this.trafficLayerEnabled) {
+        this.trafficLayer.setMap(this.map);
+      } else {
+        this.trafficLayer.setMap(null);
+      }
+    }
   },
   watch: {
     spots: {
