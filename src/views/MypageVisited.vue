@@ -78,10 +78,6 @@
                         </li>
                     </ul>
                 </div>
-                <div class="new-section">
-                    <h3>새로운 섹션</h3>
-                    <p>이 섹션은 새로운 기능이나 정보를 제공합니다.</p>
-                </div>
             </div>
         </div>
     </template>

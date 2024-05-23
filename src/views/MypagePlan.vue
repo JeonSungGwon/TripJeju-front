@@ -39,6 +39,9 @@
         <!-- 새로 생성하기 카드 -->
         <div class="col-lg-4 col-md-6 col-sm-12">
           <div class="card card-custom create-card" @click="openCreateRouteModal">
+            <div class="card-img">
+              <img class="plus" src="/assets/img/plus.png" height=30px alt="" />
+            </div>
             <div class="card-content">
               <div class="card-title">
                 <p>새로운 경로 생성하기</p>
@@ -55,15 +58,11 @@
         >
           <div class="card card-custom" @click="openRouteDetailModal(tm.id)">
             <div class="card-img">
-              <img :src="tm.thumbnailPath" alt="" />
+              <img :src="tm.img" alt="" />
             </div>
             <div class="card-content">
               <div class="card-title">
-                <router-link :to="`/reviewBoard?id=${tm.id}`">{{ tm.title }}</router-link>
-              </div>
-              <div class="card-subtitle">
-                <p>{{ tm.sub_title }}</p>
-                <p class="visit">방문 날짜: {{ tm.visitDate }}</p>
+                <h3>{{ tm.routeName }}</h3>
               </div>
             </div>
           </div>
@@ -103,10 +102,6 @@
           </router-link>
         </li>
       </ul>
-    </div>
-    <div class="new-section">
-      <h3>새로운 섹션</h3>
-      <p>이 섹션은 새로운 기능이나 정보를 제공합니다.</p>
     </div>
 
     <!-- Create Route Modal -->
@@ -304,7 +299,7 @@ onMounted(() => {
   text-align: center;
   font-size: 18px;
   flex-grow: 1;
-  height: 120px;
+  height: 60px;
   overflow: hidden;
 }
 
@@ -398,9 +393,9 @@ p {
   background: white;
   border-radius: 10px;
   width: 80%;
-  max-width: 600px;
   padding: 20px;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
 }
 
 .modal-header {

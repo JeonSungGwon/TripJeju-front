@@ -289,12 +289,13 @@ export default {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
-  border: solid;
+  border: solid 1px;
   color: black;
 }
 
 .filter-button.active {
   background-color: #ff5722;
+  border: #ff5722 1px;
   color: white;
 }
 </style>

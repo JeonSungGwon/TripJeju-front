@@ -13,7 +13,7 @@
       <div class="stats">
         <div>
           <p>나의 여행일정</p>
-          <p>{{ travelPlans }}</p>
+          <p>{{ travelPlans.length }}</p>
         </div>
         <div>
           <p>나의 리뷰</p>
@@ -21,21 +21,21 @@
         </div>
         <div>
           <p>방문 여행지</p>
-          <p>{{ visitedPlaces }}</p>
+          <p>{{ visitedPlaces.length }}</p>
         </div>
         <div>
           <p>찜한 여행지</p>
-          <p>{{ savedLocations }}</p>
+          <p>{{ savedLocations.length }}</p>
         </div>
         <div>
           <p>찜한 여행일정</p>
-          <p>{{ savedPlans }}</p>
+          <p>{{ savedPlans.length }}</p>
         </div>
       </div>
     </div>
     <div class="review-section">
       <h3>찜한 장소</h3>
-      <SpotMap/>
+      <FavoriteMap/>
       <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12" v-for="spot in displayedSpots" :key="spot.id">
           <div class="card card-custom">
@@ -44,7 +44,7 @@
             </div>
             <div class="card-content">
               <div class="card-title">
-                <router-link :to="`/spotDetail?id=${spot.id}`">{{ spot.title }}</router-link>
+                <h3>{{ spot.title }}</h3>
               </div>
               <div class="card-subtitle">
                 <p>{{ spot.address }}</p>
@@ -79,7 +79,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import { HeaderOne } from '../components';
-import SpotMap from '@/components/SpotMap.vue';
+import FavoriteMap from '@/components/FavoriteMap.vue';
 
 const spots = ref([]);
 const route = useRoute();
@@ -97,6 +97,13 @@ const userId = ref(0);
 const map = ref(null);
 const markers = ref([]);
 
+// 추가된 속성들
+const travelPlans = ref(0);
+const reviewCount = ref(0);
+const visitedPlaces = ref(0);
+const savedLocations = ref(0);
+const savedPlans = ref(0);
+
 const fetchUserData = async () => {
   try {
     const response = await axios.get('/users/myInfo', {
@@ -104,12 +111,12 @@ const fetchUserData = async () => {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`
       }
     });
-    console.log(response);
     const userData = response.data;
     profileImageUrl.value = userData.imageUrl;
     nickname.value = userData.nickname;
     userId.value = userData.id;
 
+    // Fetch travel plans, reviews, visited places, saved locations, and saved plans
     fetchFavoriteSpots();
   } catch (error) {
     console.error('Failed to fetch user data:', error);
@@ -148,7 +155,12 @@ const updateMarkers = () => {
   markers.value = displayedSpots.value.map(spot => {
     const marker = new naver.maps.Marker({
       position: new naver.maps.LatLng(spot.latitude, spot.longitude),
-      map: map.value
+      map: map.value,
+            icon: {
+              url: `./assets/img/favoriteMarker.png`,
+              size: new naver.maps.Size(30, 30),
+              scaledSize: new naver.maps.Size(30, 30),
+            },
     });
 
     const infowindow = new naver.maps.InfoWindow({

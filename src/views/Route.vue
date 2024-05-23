@@ -450,9 +450,12 @@ export default {
   overflow-y: auto;
   margin-right: 30px;
 }
+
 .detailSetting {
   overflow-y: auto;
+  max-height: 100%;
 }
+
 #mapContainer {
   flex: 3;
   height: 100%;
@@ -481,7 +484,7 @@ th {
 button {
   margin-top: 10px;
   padding: 5px 10px;
-  background-color: #E16639;
+  background-color: #e16639;
   color: white;
   border: none;
   border-radius: 4px;
