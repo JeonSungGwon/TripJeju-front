@@ -82,7 +82,10 @@ onMounted(async () => {
       currentPath = "여행지 후기";
       break;
     case "route":
-      currentPath = "일정 추천  ";
+      currentPath = "일정 추천";
+      break;
+    case "tripRoute":
+      currentPath = "여행지 추천";
       break;
     case "reviewBoard":
       const currentUrl = new URL(window.location.href);
