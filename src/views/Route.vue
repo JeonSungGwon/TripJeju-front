@@ -315,6 +315,7 @@ export default {
       } catch (error) {
         console.error("Error saving travel route:", error);
       }
+      this.$emit('save');
     },
     async saveRouteDetails(routeId) {
       const routeDetails = this.routeDetails.flatMap((details, dayIndex) =>
@@ -438,12 +439,12 @@ export default {
 #container {
   display: flex;
   height: 100%;
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
 }
 
 #mainContainer {
-  flex: 1;
+  flex: 1; /* 변경된 부분 */
   display: flex;
   flex-direction: column;
   height: 800px;
@@ -451,9 +452,10 @@ export default {
   margin-right: 30px;
 }
 
+
 .detailSetting {
-  overflow-y: auto;
-  max-height: 100%;
+  width: 600px;
+  height: 100%;
 }
 
 #mapContainer {

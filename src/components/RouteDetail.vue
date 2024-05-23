@@ -25,7 +25,7 @@
               <th v-for="day in days" :key="day" class="day-header">
                 <div>
                   <span>Day {{ day }}</span>
-                  <button @click="showRoute(day)">지도 보기</button>
+                  <button @click="showRoute(day)" class="map-view-btn">지도 보기</button>
                 </div>
               </th>
             </tr>
@@ -244,6 +244,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 .route-detail-container {
   display: flex;
@@ -264,9 +265,11 @@ export default {
   background-color: #E16639;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 6px 12px; /* 버튼 패딩 조정 */
   cursor: pointer;
   z-index: 10;
+  font-size: 12px; /* 버튼 텍스트 크기 조정 */
+  border-radius: 4px; /* 버튼 모서리를 둥글게 */
 }
 
 .traffic-toggle-btn:hover {
@@ -291,7 +294,13 @@ table {
   width: max-content;
 }
 
-th, tr, td {
+th {
+  border: 1px solid #ddd;
+  padding: 10px; /* 테이블 헤더의 패딩 조정 */
+  text-align: center; /* 가운데 정렬 추가 */
+}
+
+tr, td {
   border: 1px solid #ddd;
   padding: 8px;
 }
@@ -308,8 +317,10 @@ button {
   background-color: #E16639;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 6px 12px; /* 버튼 패딩 조정 */
   cursor: pointer;
+  font-size: 12px; /* 버튼 텍스트 크기 조정 */
+  border-radius: 4px; /* 버튼 모서리를 둥글게 */
 }
 
 button:hover {
@@ -319,5 +330,18 @@ button:hover {
 button:disabled {
   background-color: #aaa;
   cursor: not-allowed;
+}
+.map-view-btn {
+  background-color: #4caf50; /* 새로운 색상 지정 */
+  color: white;
+  border: none;
+  padding: 6px 12px; /* 버튼 패딩 조정 */
+  cursor: pointer;
+  font-size: 12px; /* 버튼 텍스트 크기 조정 */
+  border-radius: 4px; /* 버튼 모서리를 둥글게 */
+  margin-left: 10px; /* 버튼을 오른쪽으로 조금 이동 */
+}
+.map-view-btn:hover {
+  background-color: #388e3c; /* 호버 시 색상 변경 */
 }
 </style>

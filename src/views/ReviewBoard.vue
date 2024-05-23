@@ -727,6 +727,7 @@ onMounted(() => {
   align-items: center; /* 버튼들을 수직으로 정렬하기 위해 추가 */
 }
 
+
 @media screen and (max-width: 768px) {
   .modal-content {
     width: 90%;

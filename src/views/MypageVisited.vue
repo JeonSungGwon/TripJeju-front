@@ -48,7 +48,7 @@
                                     </div>
                                     <div class="card-subtitle">
                                         <p>{{ tm.sub_title }}</p>
-                                        <p class="visit">방문 날짜: {{ tm.visitDate }}</p>
+                                        <p class="visit">방문 날짜: {{ formatDate(tm.visitDate) }}</p>
                                     </div>
 
                                 </div>
@@ -125,11 +125,25 @@ const fetchUserData = async () => {
         fetchReviews();
         fetchSpots();
         fetchTotalItemCount();
+        fetchTravelPlans();
+        fetchsavedLocations(); 
     } catch (error) {
         console.error('Failed to fetch user data:', error);
     }
 };
 
+// 방문 여행지
+const fetchTotalItemCount = async () => {
+    try {
+        const response = await axios.get(`/visit/user/count/${userId.value}`);
+        totalListItemCount.value = response.data;
+    } catch (error) {
+        console.error("Failed to fetch total item count:", error);
+    }
+};
+
+
+//reviewCount
 const fetchReviews = async () => {
     try {
         const response = await axios.get(`/post/user/${userId.value}`);
@@ -137,6 +151,28 @@ const fetchReviews = async () => {
     } catch (error) {
         console.error('Failed to fetch reviews:', error);
     }
+};
+
+// savedLocations
+const fetchsavedLocations = async () => {
+  try {
+    const response = await axios.get(`/favorite/user/count/${userId.value}`)
+    console.log(response.da)
+    savedLocations.value = response.data;
+  } catch (error) {
+    console.error("Failed to fetch travel plans:", error);
+  }
+};
+
+// travelPlans
+const fetchTravelPlans = async () => {
+  try {
+    const response = await axios.get(`/travel-route/user/count/${userId.value}`)
+    console.log(response.da)
+    travelPlans.value = response.data;
+  } catch (error) {
+    console.error("Failed to fetch travel plans:", error);
+  }
 };
 
 const fetchSpots = async () => {
@@ -152,15 +188,14 @@ const fetchSpots = async () => {
     }
 };
 
-
-const fetchTotalItemCount = async () => {
-    try {
-        const response = await axios.get(`/visit/user/count/${userId.value}`);
-        totalListItemCount.value = response.data;
-    } catch (error) {
-        console.error("Failed to fetch total item count:", error);
-    }
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}년 ${month}월 ${day}일`;
 };
+
 
 watch(() => route.query.no, (newNo) => {
     currentPageIndex.value = parseInt(newNo) || 1;

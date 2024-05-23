@@ -4,18 +4,13 @@
   <div class="team-area gray-bg section-padding">
     <div class="container">
       <div class="search-container">
-        <h2 class="section-title">여행 경로 검색</h2>
-        <input
-          type="text"
-          v-model="searchTerm"
-          placeholder="여행 경로를 입력해주세요"
-          class="search-input"
-        />
+        <h2 class="section-title">여행지 일정</h2>
+        
       </div>
       <div class="row">
         <div class="col-lg-3 col-md-6 mb-4" v-for="route in filteredRoutes" :key="route.id">
           <div class="single-team-member" @click="openModal(route.id)">
-            <div class="team-member-img">
+            <div class="team-member-img" style="margin-bottom: -24px">
               <img
                 :src="route.img"
                 alt="Route Thumbnail"
@@ -35,12 +30,17 @@
       <RoutePageLink :searchTerm="searchTerm" />
       <div
         v-if="selectedRouteId"
-        class="modal-overlay"
-        @click.self="closeModal"
+        class="modal-overlay" @click.self="closeModal"
       >
-        <div class="modal-content">
-          <RouteDetail :routeId="selectedRouteId" @close="closeModal" />
-        </div>
+      <div class="modal-content modal-custom">
+    <div class="modal-header">
+      <h3>경로 상세 정보</h3>
+      <button class="close-button" @click="closeModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <RouteDetail :route-id="selectedRouteId" @close="closeModal" />
+    </div>
+  </div>
       </div>
     </div>
   </div>
@@ -60,17 +60,19 @@ const route = useRoute();
 const searchTerm = ref("");
 const selectedRouteId = ref(null);
 
+// fetchRoutes 함수 내부에서 받아온 데이터를 startAt을 기준으로 정렬합니다.
 const fetchRoutes = async () => {
   const page = route.query.no ? parseInt(route.query.no) : 0;
   try {
     const { data: fetchedRoutes } = await axios.get(
       `http://localhost:8080/travel-route`,
       {
-        params: { size: pageLimit, page, search: searchTerm.value },
+        params: { size: pageLimit, page },
       }
     );
-    console.log("Fetched Routes:", fetchedRoutes); // 확인을 위해 콘솔에 로그 출력
-    routes.value = fetchedRoutes;
+    const sortedRoutes = fetchedRoutes.sort((a, b) => new Date(b.startAt) - new Date(a.startAt));
+    routes.value = sortedRoutes;
+    console.log("Fetched and sorted Routes:", sortedRoutes); // 정렬된 데이터 확인을 위해 콘솔에 로그 출력
   } catch (error) {
     console.error("Error fetching routes:", error);
   }
@@ -165,21 +167,70 @@ const formatDate = (dateString) => {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  overflow-y: auto; /* 모달 창이 화면에 넘칠 경우 스크롤 가능하게 */
 }
 
 .modal-content {
   background: white;
-  padding: 20px;
   border-radius: 10px;
-  width: 80%;
-  max-width: 800px;
-  position: relative;
+  width: 100%; /* 너비 줄임 */
+  max-width: 940px; /* 최대 너비 설정 */
+  padding: 20px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  max-height: 80%; /* 높이 줄임 */
+  overflow-y: auto; /* 내용물이 넘칠 경우 스크롤 가능하게 */
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.modal-body {
+  margin-top: 20px;
+}
+.modal-content.modal-custom {
+  background-color: #ffffff; /* 모달 내부 배경색 조정 */
+  border-radius: 20px; /* 모달 테두리를 더 부드럽게 만듭니다. */
+  padding: 30px; /* 내부 여백을 더 넓게 조정합니다. */
+}
+
+.close-button {
+  background: #333; /* 닫기 버튼 배경색 조정 */
+  color: #fff; /* 닫기 버튼 텍스트 색상을 흰색으로 변경 */
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px 10px; /* 버튼 내부 여백을 추가하여 더 명확하게 표시 */
+  border-radius: 20%; /* 닫기 버튼을 원형으로 만듭니다. */
+  transition: background-color 0.3s; /* 호버 효과를 부드럽게 적용합니다. */
+}
+
+.close-button:hover {
+  background: #555; /* 호버 시 배경색 변경 */
+}
+
+/* 아래는 모달창이 화면보다 클 경우 스크롤이 생기도록 조정합니다. */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 90%;
+    max-width: 90%;
+  }
 }
 </style>

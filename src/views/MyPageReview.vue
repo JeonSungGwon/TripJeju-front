@@ -189,8 +189,30 @@ const fetchUserData = async () => {
     
     fetchReviews();
     fetchTotalItemCount();
+    fetchTravelPlans();
+    fetchsavedLocations();
   } catch (error) {
     console.error('Failed to fetch user data:', error);
+  }
+};
+
+const fetchsavedLocations = async () => {
+  try {
+    const response = await axios.get(`/favorite/user/count/${userId.value}`)
+    console.log(response.da)
+    savedLocations.value = response.data;
+  } catch (error) {
+    console.error("Failed to fetch travel plans:", error);
+  }
+};
+
+const fetchTravelPlans = async () => {
+  try {
+    const response = await axios.get(`/travel-route/user/count/${userId.value}`)
+    console.log(response.da)
+    travelPlans.value = response.data;
+  } catch (error) {
+    console.error("Failed to fetch travel plans:", error);
   }
 };
 

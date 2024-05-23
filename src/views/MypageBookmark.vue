@@ -13,7 +13,7 @@
       <div class="stats">
         <div>
           <p>나의 여행일정</p>
-          <p>{{ travelPlans.length }}</p>
+          <p>{{ travelPlans}}</p>
         </div>
         <div>
           <p>나의 리뷰</p>
@@ -21,15 +21,15 @@
         </div>
         <div>
           <p>방문 여행지</p>
-          <p>{{ visitedPlaces.length }}</p>
+          <p>{{ visitedPlaces}}</p>
         </div>
         <div>
           <p>찜한 여행지</p>
-          <p>{{ savedLocations.length }}</p>
+          <p>{{ savedLocations}}</p>
         </div>
         <div>
           <p>찜한 여행일정</p>
-          <p>{{ savedPlans.length }}</p>
+          <p>{{ savedPlans}}</p>
         </div>
       </div>
     </div>
@@ -80,6 +80,7 @@ import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import { HeaderOne } from '../components';
 import FavoriteMap from '@/components/FavoriteMap.vue';
+import dayjs from 'dayjs';
 
 const spots = ref([]);
 const route = useRoute();
@@ -118,8 +119,55 @@ const fetchUserData = async () => {
 
     // Fetch travel plans, reviews, visited places, saved locations, and saved plans
     fetchFavoriteSpots();
+    fetchTravelPlans();
+    fetchReviews();
+    fetchTotalItemCount();
+    fetchsavedLocations();
   } catch (error) {
     console.error('Failed to fetch user data:', error);
+  }
+};
+
+// 방문 여행지
+const fetchTotalItemCount = async () => {
+    try {
+        const response = await axios.get(`/visit/user/count/${userId.value}`);
+        visitedPlaces.value = response.data;
+    } catch (error) {
+        console.error("Failed to fetch total item count:", error);
+    }
+};
+
+
+//reviewCount
+const fetchReviews = async () => {
+    try {
+        const response = await axios.get(`/post/user/${userId.value}`);
+        reviewCount.value = response.data.length;
+    } catch (error) {
+        console.error('Failed to fetch reviews:', error);
+    }
+};
+
+// savedLocations
+const fetchsavedLocations = async () => {
+  try {
+    const response = await axios.get(`/favorite/user/count/${userId.value}`)
+    console.log(response.da)
+    savedLocations.value = response.data;
+  } catch (error) {
+    console.error("Failed to fetch travel plans:", error);
+  }
+};
+
+// travelPlans
+const fetchTravelPlans = async () => {
+  try {
+    const response = await axios.get(`/travel-route/user/count/${userId.value}`)
+    console.log(response.da)
+    travelPlans.value = response.data;
+  } catch (error) {
+    console.error("Failed to fetch travel plans:", error);
   }
 };
 
@@ -130,7 +178,8 @@ const fetchFavoriteSpots = async () => {
 
     const spotDetailsPromises = favoriteSpots.map(async (favorite) => {
       const spotResponse = await axios.get(`/spots/id/${favorite.placeId}`);
-      return { ...spotResponse.data, favoriteDate: favorite.createdAt };
+      console.log(favorite.createdAt)
+      return { ...spotResponse.data, favoriteDate: dayjs(favorite.createdAt).format('YYYY-MM-DD') };
     });
 
     spots.value = await Promise.all(spotDetailsPromises);
@@ -173,6 +222,10 @@ const updateMarkers = () => {
 
     return marker;
   });
+  
+};
+const formatDate = (dateString) => {
+  return dayjs(dateString).format('YYYY년 MM월 DD일');
 };
 
 const changePage = (pageIndex) => {
@@ -180,10 +233,6 @@ const changePage = (pageIndex) => {
   updateMarkers();
 };
 
-const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  return new Date(dateString).toLocaleDateString(undefined, options);
-};
 
 watch(() => route.query.no, (newNo) => {
   currentPageIndex.value = parseInt(newNo) || 1;

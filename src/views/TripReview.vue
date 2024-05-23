@@ -1,21 +1,34 @@
 <template>
-  <HeaderOne/>
-  <BreadCrumb/>
+  <HeaderOne />
+  <BreadCrumb />
   <div class="team-area gray-bg section-padding">
     <div class="container">
       <div class="search-container">
         <h2 class="section-title">여행지 검색</h2>
-        <input type="text" v-model="searchTerm" placeholder="여행지를 입력해주세요" class="search-input">
+        <input
+          type="text"
+          v-model="searchTerm"
+          placeholder="여행지를 입력해주세요"
+          class="search-input"
+        />
       </div>
       <div class="row">
-        <div class="col-lg-3 col-md-6 mb-4" v-for="tm in filteredTeam" :key="tm.id">
+        <div
+          class="col-lg-3 col-md-6 mb-4"
+          v-for="tm in filteredTeam"
+          :key="tm.id"
+        >
           <div class="single-team-member">
-            <div class="team-member-img">
-              <img :src="tm.thumbnailPath" alt="" height="300" width="281">
+            <div class="team-member-img" style="margin-bottom: 54px">
+              <img :src="tm.thumbnailPath" alt="" height="300" width="281" />
             </div>
             <div class="team-content">
               <div class="team-title">
-                <router-link :to="`/reviewBoard?id=${tm.id}`" class="team-link">{{ tm.title }}</router-link>
+                <router-link
+                  :to="`/reviewBoard?id=${tm.id}`"
+                  class="team-link"
+                  >{{ tm.title }}</router-link
+                >
               </div>
               <div class="team-subtitle">
                 <p>{{ tm.sub_title }}</p>
@@ -30,35 +43,38 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch, computed } from 'vue';
-import axios from 'axios';
-import { useRoute } from 'vue-router';
+import { onMounted, ref, watch, computed } from "vue";
+import axios from "axios";
+import { useRoute } from "vue-router";
 import { BreadCrumb, HeaderOne } from "../components";
-import PageLink from '@/components/PageLink.vue'
+import PageLink from "@/components/PageLink.vue";
 
 const pageLimit = 12;
 const pageOffet = ref(0);
 const team = ref([]);
 const route = useRoute();
-const searchTerm = ref('');
+const searchTerm = ref("");
 
 onMounted(initComponent);
 watch(() => route.query, initComponent);
 watch(searchTerm, initComponent);
 
 async function initComponent() {
-  const { data: fetchedTeam } = await axios.get(`/spots`,{
-    params: { size: pageLimit, page: `${route.query.no - pageLimit} `, search: searchTerm.value }
+  const { data: fetchedTeam } = await axios.get(`/spots`, {
+    params: {
+      size: pageLimit,
+      page: `${route.query.no - pageLimit} `,
+      search: searchTerm.value,
+    },
   });
   team.value = fetchedTeam;
 }
 
 const filteredTeam = computed(() => {
-  return team.value.filter(tm => {
+  return team.value.filter((tm) => {
     return tm.title.toLowerCase().includes(searchTerm.value.toLowerCase());
   });
 });
-
 </script>
 
 <style scoped>
@@ -96,7 +112,7 @@ const filteredTeam = computed(() => {
 }
 
 .team-content {
-  padding: 15px;
+  padding: -4px;
   text-align: center;
 }
 
@@ -118,5 +134,4 @@ const filteredTeam = computed(() => {
 .team-link:hover {
   color: #007bff;
 }
-
 </style>

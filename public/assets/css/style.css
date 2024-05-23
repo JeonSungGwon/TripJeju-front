@@ -785,8 +785,8 @@ textarea:focus::-webkit-input-placeholder {
 
 .header-area .logo img {
 	width: 150px;
-	margin-top: -12px;
-	height: 126px;
+	margin-top: 1px;
+	height: 100px;
 }
 
 #header-2 .navigation {
@@ -2447,7 +2447,7 @@ p.highlight i {
 }
 
 .team-member-img {
-    height: 370px;
+    height: 315px;
 }
 
 .single-team-member {
@@ -2458,7 +2458,7 @@ p.highlight i {
 
 .single-team-member .team-content {
 	position: absolute;
-	bottom: -40px;
+	bottom: 0px;
 	left: 0;
 	right: 0;
 	background: #fff;
