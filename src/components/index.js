@@ -56,3 +56,4 @@ export { default as SpotMap } from "./SpotMap.vue";
 export { default as RouteItem } from "./RouteItem.vue";
 export { default as RouteMap } from "./RouteMap.vue";
 export { default as RouteDetail } from "./RouteDetail.vue";
+export { default as RouteDetailMap } from "./RouteDetailMap.vue";

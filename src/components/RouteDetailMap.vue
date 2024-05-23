@@ -52,12 +52,12 @@ export default {
           if (!spot) return;
 
           let icon = '';
-          if (point.type === 'start') {
+          if (point.sequence === 0) {
             icon = this.markerIcons.start;
-          } else if (point.type === 'end') {
+          } else if (point.sequence === -1) {
             icon = this.markerIcons.end;
-          } else if (point.type === 'waypoint') {
-            const waypointIndex = this.routeDetails.filter(p => p.type === 'waypoint').indexOf(point) + 1;
+          } else {
+            const waypointIndex = point.sequence;
             icon = this.markerIcons[`waypoint${waypointIndex}`];
           }
 
