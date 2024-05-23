@@ -52,7 +52,6 @@
                 <div class="heart-count">
                   <i class="fas fa-heart liked"></i>
                   {{ review.heartCnt }}
-                  
                 </div>
               </div>
         </li>
@@ -68,14 +67,13 @@
     </div>
   </div>
 
-
   <!-- 모달 -->
   <div class="modal" v-if="isModalOpen">
         <div class="modal-content">
           <span class="close" @click="closeModal">&times;</span>
           <h3 class="review-main" v-if="!isEditMode">리뷰 작성</h3>
           <h3 class="review-main" v-else>리뷰 수정</h3>
-          <Datepicker class="date"v-model="visitDate" :timepicker="false" placeholder="방문 날짜를 선택하세요" v-if="!isEditMode" />
+          <Datepicker class="date" v-model="visitDate" :timepicker="false" placeholder="방문 날짜를 선택하세요" v-if="!isEditMode" />
           <textarea v-model="newReviewTitle" :placeholder="isEditMode ? '제목을 수정하세요' : '제목'" class="input-title" style="height: 44px;"></textarea>
           <textarea v-model="newReviewContent" :placeholder="isEditMode ? '내용을 수정하세요' : '내용'" class="input-content"></textarea>
           <ul v-if="selectedFiles.length > 0" class="file-list">
@@ -109,7 +107,6 @@ const newReviewTitle = ref("");
 const newReviewContent = ref("");
 const selectedFiles = ref([]);
 let editingReviewId = null;
-
 
 const travelPlans = ref(0);
 const reviewCount = ref(0);
@@ -148,6 +145,9 @@ const updateReview = () => {
       console.log(response.data)
       const index = reviews.value.findIndex(review => review.id === editingReviewId);
       if (index !== -1) {
+        // 기존 리뷰의 liked 상태와 heartCnt 값을 유지
+        response.data.liked = reviews.value[index].liked;
+        response.data.heartCnt = reviews.value[index].heartCnt;
         reviews.value[index] = response.data;
       }
       closeModal();
@@ -158,28 +158,26 @@ const updateReview = () => {
     });
 };
 
-
 const openModal = (review) => {
-    visitDate.value =
-    isEditMode.value = true;
-    editingReviewId = review.id;
-    newReviewTitle.value = review.title;
-    newReviewContent.value = review.content;
+  visitDate.value = review.visitDate;
+  isEditMode.value = true;
+  editingReviewId = review.id;
+  newReviewTitle.value = review.title;
+  newReviewContent.value = review.content;
 
-    // 이미지 파일 정보 가져오기
-    selectedFiles.value = review.fileInfos.map(fileInfo => {
-      return {
-        type: 'image', // 이미지 타입 여부를 나타내는 플래그 추가
-        preview: `http://localhost:8080/file/download/${fileInfo.saveFolder}/${fileInfo.originalFile}/${fileInfo.saveFile}`
-      };
-    });
+  // 이미지 파일 정보 가져오기
+  selectedFiles.value = review.fileInfos.map(fileInfo => {
+    return {
+      type: 'image', // 이미지 타입 여부를 나타내는 플래그 추가
+      preview: `http://localhost:8080/file/download/${fileInfo.saveFolder}/${fileInfo.originalFile}/${fileInfo.saveFile}`
+    };
+  });
   isModalOpen.value = true;
 };
 
 const closeModal = () => {
   isModalOpen.value = false;
 };
-
 
 const fetchUserData = async () => {
   try {
@@ -201,15 +199,15 @@ const fetchUserData = async () => {
 };
 
 const fetchTotalItemCount = async () => {
-    try {
-        const response = await axios.get(`/visit/user/count/${userId.value}`);
-        totalListItemCount.value = response.data;
-    } catch (error) {
-        console.error("Failed to fetch total item count:", error);
-    }
+  try {
+    const response = await axios.get(`/visit/user/count/${userId.value}`);
+    totalListItemCount.value = response.data;
+  } catch (error) {
+    console.error("Failed to fetch total item count:", error);
+  }
 };
 
-  const fetchReviews = async () => {
+const fetchReviews = async () => {
   try {
     const response = await axios.get(`/post/user/${userId.value}`);
     // createdAt을 기준으로 최신 순으로 정렬
@@ -326,7 +324,6 @@ onMounted(() => {
   padding: 5px 10px;
   cursor: pointer;
 }
-
 
 .review-section .delete-button:hover {
   background-color: #ff3b3f;
@@ -453,6 +450,7 @@ p {
   font-size: 24px;
   /* 크기 조정 */
 }
+
 .heart-count {
   font-size: 20px;
   /* 크기 조정 */

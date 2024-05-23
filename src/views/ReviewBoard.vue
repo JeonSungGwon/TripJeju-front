@@ -91,7 +91,7 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import dayjs from 'dayjs';
 
-const visitDate = ref(null);
+const visitDate = ref(dayjs().toDate());
 const reviews = ref([]);
 const isModalOpen = ref(false);
 const isEditMode = ref(false);
@@ -229,6 +229,9 @@ const updateReview = () => {
       console.log(response.data)
       const index = reviews.value.findIndex(review => review.id === editingReviewId);
       if (index !== -1) {
+        // 기존 리뷰의 liked 상태와 heartCnt 값을 유지
+        response.data.liked = reviews.value[index].liked;
+        response.data.heartCnt = reviews.value[index].heartCnt;
         reviews.value[index] = response.data;
       }
       closeModal();
@@ -238,6 +241,7 @@ const updateReview = () => {
       console.error("리뷰 수정 중 오류가 발생했습니다.", error.response.data);
     });
 };
+
 
 const deleteReview = (reviewId) => {
   axios
@@ -514,6 +518,9 @@ onMounted(() => {
   margin-right: 5px;
   align-items: center;
 }
+.like-container :hover{
+  background-color: white;
+}
 
 .heart-count {
   font-size: 20px;
@@ -528,6 +535,7 @@ onMounted(() => {
   cursor: pointer;
   outline: none;
 }
+
 
 .like-button .fas.fa-heart {
   color: red;

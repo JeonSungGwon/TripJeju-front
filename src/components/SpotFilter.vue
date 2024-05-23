@@ -241,6 +241,7 @@ export default {
 .filter-search {
   display: flex;
   justify-content: center;
+  border-radius: 8px;
   width: 100%;
   margin-bottom: 1rem;
 }
@@ -284,11 +285,11 @@ export default {
 .filter-button {
   margin: 0.5rem;
   padding: 5px 10px;
-  background-color: #f0f0f0;
-  border-radius: 4px;
+  background-color: white;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
-  border: none;
+  border: solid;
   color: black;
 }
 
