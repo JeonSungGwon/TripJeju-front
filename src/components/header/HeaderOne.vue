@@ -148,7 +148,7 @@ onMounted(() => {
 													</li>
 													<li>
 														<router-link
-															:to="{ name: 'route' }">여행지 추천</router-link>
+															:to="{ name: 'tripRoute' }">여행지 추천</router-link>
 													</li>
 		
 												</ul>
