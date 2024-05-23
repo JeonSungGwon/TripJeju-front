@@ -5,27 +5,23 @@
 
     <div class="review-list">
       <h2>여행 리뷰</h2>
-  <div class="review-list-header">
-    <button @click="openModal(null)" class="write-review-button">
-      리뷰 작성하기
-    </button>
-    <div class="sort-buttons">
-      <button @click="sortByRecent" class="sort-button">최신순</button>
-      <button @click="sortByLikes" class="sort-button">좋아요순</button>
-    </div>
-  </div>
+      <div class="review-list-header">
+        <button @click="openModal(null)" class="write-review-button">리뷰 작성하기</button>
+        <div class="sort-buttons">
+          <button @click="sortByRecent" class="sort-button">최신순</button>
+          <button @click="sortByLikes" class="sort-button">좋아요순</button>
+        </div>
+      </div>
 
       <!-- 모달 -->
       <div class="modal" v-if="isModalOpen">
         <div class="modal-content">
           <span class="close" @click="closeModal">&times;</span>
-          <h3 v-if="!isEditMode">리뷰 작성</h3>
-          <h3 v-else>리뷰 수정</h3>
-          <Datepicker v-model="visitDate" :timepicker="false" placeholder="방문 날짜를 선택하세요" v-if="!isEditMode" />
-          <textarea v-model="newReviewTitle" :placeholder="isEditMode ? '제목을 수정하세요' : '제목'" class="input-title"
-            style="height: 44px;"></textarea>
-          <textarea v-model="newReviewContent" :placeholder="isEditMode ? '내용을 수정하세요' : '내용'"
-            class="input-content"></textarea>
+          <h3 class="review-main" v-if="!isEditMode">리뷰 작성</h3>
+          <h3 class="review-main" v-else>리뷰 수정</h3>
+          <Datepicker class="date"v-model="visitDate" :timepicker="false" placeholder="방문 날짜를 선택하세요" v-if="!isEditMode" />
+          <textarea v-model="newReviewTitle" :placeholder="isEditMode ? '제목을 수정하세요' : '제목'" class="input-title" style="height: 44px;"></textarea>
+          <textarea v-model="newReviewContent" :placeholder="isEditMode ? '내용을 수정하세요' : '내용'" class="input-content"></textarea>
           <ul v-if="selectedFiles.length > 0" class="file-list">
             <li v-for="(file, index) in selectedFiles" :key="index">
               <img v-if="file.type === 'image'" :src="file.preview" class="file-preview" height="100" />
@@ -38,8 +34,7 @@
               <img v-if="file.type.startsWith('image/')" :src="previewImage(file)" class="file-preview" height="100" />
             </li>
           </ul>
-          <button @click="isEditMode ? updateReview() : submitReview()" class="submit-button">{{ isEditMode ? '수정 완료' :
-            '작성 완료' }}</button>
+          <button @click="isEditMode ? updateReview() : submitReview()" class="submit-button">{{ isEditMode ? '수정 완료' : '작성 완료' }}</button>
         </div>
       </div>
 
@@ -48,7 +43,10 @@
         <ul class="reviews">
           <li v-for="review in reviews" :key="review.id" class="review-item">
             <div class="review-header">
-              <h3 class="review-title">{{ review.title }}</h3>
+              <h3 class="review-title">
+                {{ review.title }}
+                <small class="review-date">{{ formatDate(review.createdAt) }}</small>
+              </h3>
               <!-- 좋아요 개수와 버튼을 담는 컨테이너 -->
               <div class="like-container">
                 <!-- 좋아요 개수 표시 -->
@@ -64,20 +62,14 @@
             <p class="review-content">{{ review.content }}</p>
             <ul v-if="review.fileInfos && review.fileInfos.length > 0" class="image-list">
               <li v-for="(file, index) in review.fileInfos" :key="index" class="image-item">
-                <img
-                  :src="`http://localhost:8080/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`"
-                  class="review-image" />
+                <img :src="`http://localhost:8080/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`" class="review-image" />
               </li>
             </ul>
             <div>
               <!-- 수정 버튼 -->
-              <button v-if="review.userId === userId" @click="openModal(review)" class="edit-button">
-                수정
-              </button>
+              <button v-if="review.userId === userId" @click="openModal(review)" class="edit-button">수정</button>
               <!-- 삭제 버튼을 특정 조건에 따라 렌더링 -->
-              <button v-if="review.userId === userId" @click="deleteReview(review.id)" class="delete-button">
-                삭제
-              </button>
+              <button v-if="review.userId === userId" @click="deleteReview(review.id)" class="delete-button">삭제</button>
             </div>
           </li>
         </ul>
@@ -88,6 +80,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import HeaderOne from "@/components/header/HeaderOne.vue";
@@ -156,6 +149,10 @@ const sortByRecent = () => {
 const sortByLikes = () => {
   reviews.value.sort((a, b) => b.heartCnt - a.heartCnt);
 };
+const formatDate = (date) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(date).toLocaleDateString('ko-KR', options);
+  }
 
 const submitReview = () => {
   const formData = new FormData();
@@ -185,6 +182,7 @@ const submitReview = () => {
     })
     .then((response) => {
       console.log(response.data)
+      response.data.createdAt = new Date().toISOString();
       reviews.value.unshift(response.data);
       closeModal();
       selectedFiles.value = [];
@@ -394,7 +392,9 @@ onMounted(() => {
   border-radius: 5px;
   font-size: 16px;
 }
-
+.date{
+  margin-top: 20px;
+}
 .file-list {
   margin-bottom: 10px;
 }
@@ -520,7 +520,6 @@ onMounted(() => {
   /* 크기 조정 */
   /* margin-right: 10px;  */
 }
-
 .like-button {
   margin-left: auto;
   margin-bottom: 7px;
@@ -584,7 +583,9 @@ onMounted(() => {
   cursor: pointer;
   transition: background-color 0.3s;
 }
-
+.review-main{
+  margin-top: 10px;
+}
 .delete-button:hover {
   background-color: #d63b20;
   /* 호버 시 색상 변경 */
@@ -698,6 +699,9 @@ onMounted(() => {
 .submit-button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+.review-date{
+  font-size: 12px;
 }
 
 .submit-button:disabled:hover {

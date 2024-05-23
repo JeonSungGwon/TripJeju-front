@@ -1,88 +1,90 @@
-<template>
-    <div>
-        <HeaderOne />
-        <div class="container">
-            <div class="profile-section">
-                <div class="profile">
-                    <img :src="profileImageUrl" alt="Profile Image" />
-                    <div>
-                        <h2>{{ nickname }}님의 제주여행</h2>
+    <template>
+        <div>
+            <HeaderOne />
+            <div class="container">
+                <div class="profile-section">
+                    <div class="profile">
+                        <img :src="profileImageUrl" alt="Profile Image" />
+                        <div>
+                            <h2>{{ nickname }}님의 제주여행</h2>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="stats-section">
-                <div class="stats">
-                    <div>
-                        <p>나의 여행일정</p>
-                        <p>{{ travelPlans }}</p>
-                    </div>
-                    <div>
-                        <p>나의 리뷰</p>
-                        <p>{{ reviewCount }}</p>
-                    </div>
-                    <div>
-                        <p>방문 여행지</p>
-                        <p>{{ visitedPlaces }}</p>
-                    </div>
-                    <div>
-                        <p>찜한 여행지</p>
-                        <p>{{ savedLocations }}</p>
-                    </div>
-                    <div>
-                        <p>찜한 여행일정</p>
-                        <p>{{ savedPlans }}</p>
+                <div class="stats-section">
+                    <div class="stats">
+                        <div>
+                            <p>나의 여행일정</p>
+                            <p>{{ travelPlans }}</p>
+                        </div>
+                        <div>
+                            <p>나의 리뷰</p>
+                            <p>{{ reviewCount }}</p>
+                        </div>
+                        <div>
+                            <p>방문 여행지</p>
+                            <p>{{ visitedPlaces }}</p>
+                        </div>
+                        <div>
+                            <p>찜한 여행지</p>
+                            <p>{{ savedLocations }}</p>
+                        </div>
+                        <div>
+                            <p>찜한 여행일정</p>
+                            <p>{{ savedPlans }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="review-section">
-                <h3>방문 여행지</h3>
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 col-sm-12" v-for="tm in team" :key="tm.id">
-                        <div class="card card-custom">
-                            <div class="card-img">
-                                <img :src="tm.thumbnailPath" alt="" />
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">
-                                    <router-link :to="`/reviewBoard?id=${tm.id}`">{{ tm.title }}</router-link>
+                <div class="review-section">
+                    <h3>방문 여행지</h3>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 col-sm-12" v-for="tm in team" :key="tm.id">
+                            <div class="card card-custom">
+                                <div class="card-img">
+                                    <img :src="tm.thumbnailPath" alt="" />
                                 </div>
-                                <div class="card-subtitle">
-                                    <p>{{ tm.sub_title }}</p>
+                                <div class="card-content">
+                                    <div class="card-title">
+                                        <router-link :to="`/reviewBoard?id=${tm.id}`">{{ tm.title }}</router-link>
+                                    </div>
+                                    <div class="card-subtitle">
+                                        <p>{{ tm.sub_title }}</p>
+                                        <p class="visit">방문 날짜: {{ tm.visitDate }}</p>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" v-if="prev">
+                            <router-link :to="`/myPageVisited?no=${currentPageIndex - 1}`" class="page-link"
+                                aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </router-link>
+                        </li>
+
+                        <li v-for="index in pageCount" :key="index" class="page-item"
+                            :class="{ active: index === currentPageIndex }">
+                            <router-link :to="`/myPageVisited?no=${index}`" class="page-link">
+                                {{ index }}
+                            </router-link>
+                        </li>
+
+                        <li class="page-item" v-if="next">
+                            <router-link :to="`/myPageVisited?no=${currentPageIndex + 1}`" class="page-link"
+                                aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </router-link>
+                        </li>
+                    </ul>
                 </div>
-                <ul class="pagination justify-content-center">
-                    <li class="page-item" v-if="prev">
-                        <router-link :to="`/myPageVisited?no=${currentPageIndex - 1}`" class="page-link"
-                            aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </router-link>
-                    </li>
-
-                    <li v-for="index in pageCount" :key="index" class="page-item"
-                        :class="{ active: index === currentPageIndex }">
-                        <router-link :to="`/myPageVisited?no=${index}`" class="page-link">
-                            {{ index }}
-                        </router-link>
-                    </li>
-
-                    <li class="page-item" v-if="next">
-                        <router-link :to="`/myPageVisited?no=${currentPageIndex + 1}`" class="page-link"
-                            aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </router-link>
-                    </li>
-                </ul>
-            </div>
-            <div class="new-section">
-                <h3>새로운 섹션</h3>
-                <p>이 섹션은 새로운 기능이나 정보를 제공합니다.</p>
+                <div class="new-section">
+                    <h3>새로운 섹션</h3>
+                    <p>이 섹션은 새로운 기능이나 정보를 제공합니다.</p>
+                </div>
             </div>
         </div>
-    </div>
-</template>
+    </template>
 
 <script setup>
 import axios from 'axios';
@@ -146,11 +148,14 @@ const fetchSpots = async () => {
         const response = await axios.get(`/visit/user/${userId.value}`, {
             params: { size: listRowCount, page: currentPageIndex.value - 1 }
         });
-        team.value = response.data;
+        // 받아온 데이터를 visitDate를 기준으로 내림차순 정렬
+        team.value = response.data.sort((a, b) => new Date(b.visitDate) - new Date(a.visitDate));
+        console.log(team.value);
     } catch (error) {
         console.error("Failed to fetch spots:", error);
     }
 };
+
 
 const fetchTotalItemCount = async () => {
     try {
@@ -221,6 +226,7 @@ onMounted(() => {
 
 .card-custom {
     width: 100%;
+    height: 100%; /* 카드 높이 조절 */
 }
 
 .card {
@@ -231,37 +237,54 @@ onMounted(() => {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    height: 100%; /* 카드 높이 조절 */
 }
 
 .card-img img {
     width: 100%;
-    height: 200px;
+    height: auto; /* 이미지가 자동으로 비율 유지하도록 설정 */
     object-fit: cover;
+    height: 200px; 
 }
 
 .card-content {
-    padding: 20px;
+    padding: 22px; /* 내용 영역 패딩 조정 */
     display: flex;
     flex-direction: column;
     text-align: center;
-    font-size: 20px;
+    font-size: 18px; /* 폰트 사이즈 축소 */
     flex-grow: 1;
+    height: 120px; /* 내용 영역 높이 조절 */
+    overflow: hidden; /* 초과 내용 숨김 처리 */
 }
 
 .card-title {
-    font-size: 18px;
+    font-size: 16px; /* 제목 폰트 사이즈 축소 */
     font-weight: bold;
-    margin-bottom: -17px;
+    margin-bottom: 5px; /* 제목과 부제목 간격 조정 */
+    overflow: hidden;
+    text-overflow: ellipsis; /* 제목이 너무 길 경우 생략 (...) 처리 */
+    white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
 }
 
 .card-subtitle {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis; /* 부제목이 너무 길 경우 생략 (...) 처리 */
+    white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
 }
-a{
+
+
+a {
     font-size: 18px;
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: #333;
 }
+
+a:hover {
+    color: #555;
+}
+
+
 .social-links {
     list-style-type: none;
     padding: 0;
@@ -292,8 +315,18 @@ p {
     color: #666;
     font-size: 16px;
 }
-
+.visit{
+    color: rgb(56, 163, 56);
+    font-size: 13px;
+}
 .pagination {
     margin-top: 20px;
+}
+@media (min-width: 992px) {
+    .col-lg-4 {
+        flex: 0 0 auto;
+        width: 33.33333333%;
+        margin-bottom: 27px;
+    }
 }
 </style>
