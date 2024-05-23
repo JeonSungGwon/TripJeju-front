@@ -194,6 +194,7 @@ const fetchUserData = async () => {
     userId.value = userData.id;
     
     fetchReviews();
+    fetchTotalItemCount();
   } catch (error) {
     console.error('Failed to fetch user data:', error);
   }
@@ -201,12 +202,12 @@ const fetchUserData = async () => {
 
 const fetchTotalItemCount = async () => {
     try {
-      const response = await axios.get("/visit/user/count/1");
-      totalListItemCount.value = response.data;
+        const response = await axios.get(`/visit/user/count/${userId.value}`);
+        totalListItemCount.value = response.data;
     } catch (error) {
-      console.error("Failed to fetch total item count:", error);
-    } 
-  };
+        console.error("Failed to fetch total item count:", error);
+    }
+};
 
   const fetchReviews = async () => {
   try {
