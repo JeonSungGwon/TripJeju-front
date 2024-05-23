@@ -1,12 +1,16 @@
 <template>
   <div class="route-detail-container">
     <div class="map-container">
-      <RouteMap 
+      <RouteDetailMap 
         ref="routeMap" 
         :spots="spotDetails" 
-        :openSpotId="openSpotId" 
-        :routeDetails="routeDetails" 
-        :routePath="computedRoutePath" 
+        :open-spot-id="openSpotId"
+        :start-point="startPoint"
+        :end-point="endPoint"
+        :waypoints="waypoints" 
+        :route-details="filteredRouteDetails" 
+        :route-path="computedRoutePath" 
+        :traffic-layer-enabled="trafficLayerEnabled"
       />
       <button @click="toggleTrafficLayer" class="traffic-toggle-btn">
         {{ trafficLayerEnabled ? '혼잡도 끄기' : '혼잡도 켜기' }}
@@ -51,11 +55,11 @@
 <script>
 import { ref, watch, onMounted, computed } from 'vue';
 import axios from 'axios';
-import RouteMap from '@/components/RouteMap.vue';
+import RouteDetailMap from '@/components/RouteDetailMap.vue';
 
 export default {
   components: {
-    RouteMap,
+    RouteDetailMap,
   },
   props: {
     routeId: Number
@@ -68,6 +72,10 @@ export default {
     const sequences = [0, 1, 2, 3, 4, 5, -1];
     const trafficLayerEnabled = ref(false);
     const openSpotId = ref(null);
+    const startPoint = ref(null);
+    const endPoint = ref(null);
+    const waypoints = ref([]);
+    const filteredRouteDetails = ref([]);
 
     const fetchRouteDetails = async () => {
       try {
@@ -107,8 +115,8 @@ export default {
     };
 
     const showRoute = (day) => {
-      const points = routeDetails.value.filter(detail => detail.day === day);
-      const routePoints = points.map(point => {
+      filteredRouteDetails.value = routeDetails.value.filter(detail => detail.day === day);
+      const routePoints = filteredRouteDetails.value.map(point => {
         const spot = spotDetails.value.find(spot => spot.id === point.placeId);
         let type;
         if (point.sequence === 0) {
@@ -121,7 +129,14 @@ export default {
         return { lat: spot.latitude, lng: spot.longitude, type: type };
       });
 
+      setRoutePoints(routePoints);
       drawRoute(routePoints);
+    };
+
+    const setRoutePoints = (routePoints) => {
+      startPoint.value = routePoints.find(point => point.type === 'start');
+      endPoint.value = routePoints.find(point => point.type === 'end');
+      waypoints.value = routePoints.filter(point => point.type && point.type.startsWith('waypoint'));
     };
 
     const scrollLeft = () => {
@@ -145,25 +160,16 @@ export default {
     });
 
     const drawRoute = (route) => {
-      if (!route || route.length === 0) {
-        console.error("Route is empty or not provided");
+      if (!startPoint.value || !endPoint.value) {
+        console.error("Start or end point is missing", { start: startPoint.value, end: endPoint.value });
         return;
       }
 
-      const start = route.find((point) => point.type === "start");
-      const end = route.find((point) => point.type === "end");
-      const waypoints = route.filter((point) => point.type.startsWith("waypoint"));
-
-      if (!start || !end) {
-        console.error("Start or end point is missing", { start, end });
-        return;
-      }
-
-      const waypointPositions = waypoints
+      const waypointPositions = waypoints.value
         .map((point) => `${point.lng},${point.lat}`)
         .join("|");
-      const startPos = `${start.lng},${start.lat}`;
-      const endPos = `${end.lng},${end.lat}`;
+      const startPos = `${startPoint.value.lng},${startPoint.value.lat}`;
+      const endPos = `${endPoint.value.lng},${endPoint.value.lat}`;
       const waypointsParam = waypointPositions
         ? `&waypoints=${waypointPositions}`
         : "";
@@ -202,10 +208,6 @@ export default {
 
     const toggleTrafficLayer = () => {
       trafficLayerEnabled.value = !trafficLayerEnabled.value;
-      const routeMapComponent = document.querySelector('#mapContainer').__vue__;
-      if (routeMapComponent) {
-        routeMapComponent.toggleTrafficLayer();
-      }
     };
 
     onMounted(() => {
@@ -222,12 +224,17 @@ export default {
       sortedSequences,
       trafficLayerEnabled,
       openSpotId,
+      startPoint,
+      endPoint,
+      waypoints,
+      filteredRouteDetails,
       fetchRouteDetails,
       getPoint,
       getSpotTitle,
       getPointTypeLabel,
       formatTime,
       showRoute,
+      setRoutePoints,
       scrollLeft,
       scrollRight,
       drawRoute,
