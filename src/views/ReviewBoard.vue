@@ -19,9 +19,11 @@
           <span class="close" @click="closeModal">&times;</span>
           <h3 class="review-main" v-if="!isEditMode">리뷰 작성</h3>
           <h3 class="review-main" v-else>리뷰 수정</h3>
-          <Datepicker class="date"v-model="visitDate" :timepicker="false" placeholder="방문 날짜를 선택하세요" v-if="!isEditMode" />
-          <textarea v-model="newReviewTitle" :placeholder="isEditMode ? '제목을 수정하세요' : '제목'" class="input-title" style="height: 44px;"></textarea>
-          <textarea v-model="newReviewContent" :placeholder="isEditMode ? '내용을 수정하세요' : '내용'" class="input-content"></textarea>
+          <input type="date" class="date" v-model="visitDate" placeholder="방문 날짜를 선택하세요" v-if="!isEditMode" />
+          <textarea v-model="newReviewTitle" :placeholder="isEditMode ? '제목을 수정하세요' : '제목'" class="input-title"
+            style="height: 44px;"></textarea>
+          <textarea v-model="newReviewContent" :placeholder="isEditMode ? '내용을 수정하세요' : '내용'"
+            class="input-content"></textarea>
           <ul v-if="selectedFiles.length > 0" class="file-list">
             <li v-for="(file, index) in selectedFiles" :key="index">
               <img v-if="file.type === 'image'" :src="file.preview" class="file-preview" height="100" />
@@ -34,7 +36,8 @@
               <img v-if="file.type.startsWith('image/')" :src="previewImage(file)" class="file-preview" height="100" />
             </li>
           </ul>
-          <button @click="isEditMode ? updateReview() : submitReview()" class="submit-button">{{ isEditMode ? '수정 완료' : '작성 완료' }}</button>
+          <button @click="isEditMode ? updateReview() : submitReview()" class="submit-button">{{ isEditMode ? '수정 완료' :
+            '작성 완료' }}</button>
         </div>
       </div>
 
@@ -62,7 +65,9 @@
             <p class="review-content">{{ review.content }}</p>
             <ul v-if="review.fileInfos && review.fileInfos.length > 0" class="image-list">
               <li v-for="(file, index) in review.fileInfos" :key="index" class="image-item">
-                <img :src="`http://localhost:8080/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`" class="review-image" />
+                <img
+                  :src="`http://localhost:8080/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`"
+                  class="review-image" />
               </li>
             </ul>
             <div>
@@ -150,9 +155,9 @@ const sortByLikes = () => {
   reviews.value.sort((a, b) => b.heartCnt - a.heartCnt);
 };
 const formatDate = (date) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(date).toLocaleDateString('ko-KR', options);
-  }
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(date).toLocaleDateString('ko-KR', options);
+}
 
 const submitReview = () => {
   const formData = new FormData();
@@ -396,9 +401,15 @@ onMounted(() => {
   border-radius: 5px;
   font-size: 16px;
 }
-.date{
+
+.date {
   margin-top: 20px;
+  width: 200px;
+  height: 30px;
+  border-radius: 5px;
+  
 }
+
 .file-list {
   margin-bottom: 10px;
 }
@@ -518,7 +529,8 @@ onMounted(() => {
   margin-right: 5px;
   align-items: center;
 }
-.like-container :hover{
+
+.like-container :hover {
   background-color: white;
 }
 
@@ -527,6 +539,7 @@ onMounted(() => {
   /* 크기 조정 */
   /* margin-right: 10px;  */
 }
+
 .like-button {
   margin-left: auto;
   margin-bottom: 7px;
@@ -591,9 +604,11 @@ onMounted(() => {
   cursor: pointer;
   transition: background-color 0.3s;
 }
-.review-main{
+
+.review-main {
   margin-top: 10px;
 }
+
 .delete-button:hover {
   background-color: #d63b20;
   /* 호버 시 색상 변경 */
@@ -708,7 +723,8 @@ onMounted(() => {
   background-color: #cccccc;
   cursor: not-allowed;
 }
-.review-date{
+
+.review-date {
   font-size: 12px;
 }
 
@@ -724,7 +740,8 @@ onMounted(() => {
 .review-list-header {
   display: flex;
   justify-content: space-between;
-  align-items: center; /* 버튼들을 수직으로 정렬하기 위해 추가 */
+  align-items: center;
+  /* 버튼들을 수직으로 정렬하기 위해 추가 */
 }
 
 
