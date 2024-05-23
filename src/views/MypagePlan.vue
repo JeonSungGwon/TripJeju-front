@@ -13,7 +13,7 @@
       <div class="stats">
         <div>
           <p>나의 여행일정</p>
-          <p>{{ travelPlans }}</p>
+          <p>{{ travelPlans.length }}</p>
         </div>
         <div>
           <p>나의 리뷰</p>
@@ -35,23 +35,104 @@
     </div>
     <div class="review-section">
       <h3>나의 여행일정</h3>
-      <ul>
-        <li v-for="(review, index) in displayedReviews" :key="index">
-          <h4>{{ review.title }}</h4>
-          <p>{{ review.content }}</p>
-          <ul v-if="review.fileInfos && review.fileInfos.length > 0" class="image-list">
-            <li v-for="(file, index) in review.fileInfos" :key="index" class="image-item">
-              <img :src="`/file/download/${file.saveFolder}/${file.originalFile}/${file.saveFile}`"
-                class="review-image" />
-            </li>
-          </ul>
+      <div class="row">
+        <!-- 새로 생성하기 카드 -->
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <div class="card card-custom create-card" @click="openCreateRouteModal">
+            <div class="card-content">
+              <div class="card-title">
+                <p>새로운 경로 생성하기</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 기존 여행 일정 카드 -->
+        <div
+          class="col-lg-4 col-md-6 col-sm-12"
+          v-for="tm in travelPlans"
+          :key="tm.id"
+        >
+          <div class="card card-custom" @click="openRouteDetailModal(tm.id)">
+            <div class="card-img">
+              <img :src="tm.thumbnailPath" alt="" />
+            </div>
+            <div class="card-content">
+              <div class="card-title">
+                <router-link :to="`/reviewBoard?id=${tm.id}`">{{ tm.title }}</router-link>
+              </div>
+              <div class="card-subtitle">
+                <p>{{ tm.sub_title }}</p>
+                <p class="visit">방문 날짜: {{ tm.visitDate }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <ul class="pagination justify-content-center">
+        <li class="page-item" v-if="prev">
+          <router-link
+            :to="`/myPagePlan?no=${currentPageIndex - 1}`"
+            class="page-link"
+            aria-label="Previous"
+          >
+            <span aria-hidden="true">&laquo;</span>
+          </router-link>
+        </li>
+
+        <li
+          v-for="index in pageCount"
+          :key="index"
+          class="page-item"
+          :class="{ active: index === currentPageIndex }"
+        >
+          <router-link :to="`/myPagePlan?no=${index}`" class="page-link">
+            {{ index }}
+          </router-link>
+        </li>
+
+        <li class="page-item" v-if="next">
+          <router-link
+            :to="`/myPagePlan?no=${currentPageIndex + 1}`"
+            class="page-link"
+            aria-label="Next"
+          >
+            <span aria-hidden="true">&raquo;</span>
+          </router-link>
         </li>
       </ul>
-      <button v-if="showMoreButton" @click="showMoreReviews">더보기</button>
     </div>
     <div class="new-section">
       <h3>새로운 섹션</h3>
       <p>이 섹션은 새로운 기능이나 정보를 제공합니다.</p>
+    </div>
+
+    <!-- Create Route Modal -->
+    <div v-if="showCreateRouteModal" class="modal-overlay" @click.self="closeCreateRouteModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>새로운 경로 생성하기</h3>
+          <button class="close-button" @click="closeCreateRouteModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <Route @close="closeCreateRouteModal" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Route Detail Modal -->
+    <div v-if="showRouteDetailModal" class="modal-overlay" @click.self="closeRouteDetailModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>경로 상세 정보</h3>
+          <button class="close-button" @click="closeRouteDetailModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <RouteDetail :route-id="selectedRouteId" @close="closeRouteDetailModal" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -60,18 +141,24 @@
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import { HeaderOne } from "../components";
+import Route from "@/views/Route.vue";
+import RouteDetail from "@/components/RouteDetail.vue";
 
-const userName = "전성권";
-const travelPlans = ref(0);
+const userName = ref("");
+const travelPlans = ref([]);
 const reviewCount = ref(0);
 const savedPlans = ref(0);
 const visitedPlaces = ref(0);
 const savedLocations = ref(0);
-const reviews = ref([]);
-const reviewsToShow = ref(5); // 초기에 보여줄 리뷰 개수
 const profileImageUrl = ref("");
 const nickname = ref("");
 const userId = ref(0);
+const showCreateRouteModal = ref(false);
+const showRouteDetailModal = ref(false);
+const selectedRouteId = ref(null);
+const currentPageIndex = ref(1); // pagination 관련 변수
+const listRowCount = 6; // 한 페이지당 보여줄 항목 수
+const totalListItemCount = ref(0);
 
 const fetchUserData = async () => {
   try {
@@ -86,34 +173,54 @@ const fetchUserData = async () => {
     nickname.value = userData.nickname;
     userId.value = userData.id;
 
+    fetchTravelPlans();
     fetchReviews();
   } catch (error) {
     console.error("Failed to fetch user data:", error);
   }
 };
 
+const fetchTravelPlans = async () => {
+  try {
+    const response = await axios.get(`/travel-route/user/${userId.value}`, {
+      params: { size: listRowCount, page: currentPageIndex.value - 1 }
+    });
+    travelPlans.value = response.data.sort((a, b) => new Date(b.visitDate) - new Date(a.visitDate));
+    totalListItemCount.value = response.headers['x-total-count']; // 서버에서 총 항목 수를 헤더에 담아 보낸다고 가정
+  } catch (error) {
+    console.error("Failed to fetch travel plans:", error);
+  }
+};
+
 const fetchReviews = async () => {
   try {
-    const response = await axios.get(
-      `/post/user/${userId.value}`
-    );
-    reviews.value = response.data;
+    const response = await axios.get(`/post/user/${userId.value}`);
     reviewCount.value = response.data.length;
   } catch (error) {
     console.error("Failed to fetch reviews:", error);
   }
 };
 
-const displayedReviews = computed(() =>
-  reviews.value.slice(0, reviewsToShow.value)
-);
-const showMoreButton = computed(
-  () => reviews.value.length > reviewsToShow.value
-);
-
-const showMoreReviews = () => {
-  reviewsToShow.value += 5; // 더보기 버튼 클릭 시 5개 더 보여주기
+const openCreateRouteModal = () => {
+  showCreateRouteModal.value = true;
 };
+
+const closeCreateRouteModal = () => {
+  showCreateRouteModal.value = false;
+};
+
+const openRouteDetailModal = (routeId) => {
+  selectedRouteId.value = routeId;
+  showRouteDetailModal.value = true;
+};
+
+const closeRouteDetailModal = () => {
+  showRouteDetailModal.value = false;
+};
+
+// Pagination 관련 메서드
+const prev = computed(() => currentPageIndex.value > 1);
+const next = computed(() => currentPageIndex.value < Math.ceil(totalListItemCount.value / listRowCount));
 
 onMounted(() => {
   fetchUserData();
@@ -154,6 +261,12 @@ onMounted(() => {
   width: 100px;
   height: 100px;
   background-color: #f0f0f0;
+  margin-right: 20px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
 }
 
 .review-section ul {
@@ -161,69 +274,83 @@ onMounted(() => {
   padding: 0;
 }
 
-.review-section li {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  background: #fff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-}
-
-.review-section li h4 {
-  color: #333;
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.review-section li p {
-  color: #666;
-  font-size: 16px;
-}
-
-.review-section button {
-  display: block;
-  margin: 0 auto;
-  padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.review-section button:hover {
-  background-color: #555;
-}
-
-.image-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.image-item {
-  width: 100px;
-  /* 아이템의 너비를 조절하여 이미지 크기 조절 */
-  height: 100px;
-  /* 아이템의 높이를 조절하여 이미지 크기 조절 */
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.image-item img {
+.card-custom {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
 }
 
-.image-item img:hover {
-  transform: scale(1.05);
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  height: 200px;
+}
+
+.card-content {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: 18px;
+  flex-grow: 1;
+  height: 120px;
+  overflow: hidden;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+a {
+  font-size: 18px;
+  text-decoration: none;
+  color: #333;
+}
+
+a:hover {
+  color: #555;
+}
+
+.social-links {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.social-links li {
+  color: #333;
+  font-size: 20px;
+}
+
+.social-links li a {
+  color: inherit;
+}
+
+.social-links li a:hover {
+  color: #555;
 }
 
 h3 {
@@ -235,5 +362,61 @@ h3 {
 p {
   color: #666;
   font-size: 16px;
+}
+
+.visit {
+  color: rgb(56, 163, 56);
+  font-size: 13px;
+}
+
+.pagination {
+  margin-top: 20px;
+}
+
+@media (min-width: 992px) {
+  .col-lg-4 {
+    flex: 0 0 auto;
+    width: 33.33333333%;
+    margin-bottom: 27px;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px;
+  padding: 20px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.modal-body {
+  margin-top: 20px;
 }
 </style>

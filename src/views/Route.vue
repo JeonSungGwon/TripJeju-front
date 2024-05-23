@@ -1,7 +1,5 @@
 <template>
   <div>
-    <HeaderOne />
-    <BreadCrumb />
     <div id="container">
       <div id="mainContainer">
         <div class="routeSetting">
@@ -440,7 +438,7 @@ export default {
 #container {
   display: flex;
   height: 100%;
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
 }
 
@@ -450,8 +448,11 @@ export default {
   flex-direction: column;
   height: 800px;
   overflow-y: auto;
+  margin-right: 30px;
 }
-
+.detailSetting {
+  overflow-y: auto;
+}
 #mapContainer {
   flex: 3;
   height: 100%;
